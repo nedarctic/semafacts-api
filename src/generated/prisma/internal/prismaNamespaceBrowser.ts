@@ -51,7 +51,10 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Company: 'Company',
+  Category: 'Category',
+  ReportingPage: 'ReportingPage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -77,11 +80,46 @@ export const UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   status: 'status',
+  companyId: 'companyId',
   createdAt: 'createdAt',
-  updated: 'updated'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CompanyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  reportingLinkSlug: 'reportingLinkSlug',
+  slaDays: 'slaDays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  categoryName: 'categoryName',
+  createdAt: 'createdAt'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const ReportingPageScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  title: 'title',
+  introContent: 'introContent',
+  policyUrl: 'policyUrl',
+  reportingPageUrl: 'reportingPageUrl'
+} as const
+
+export type ReportingPageScalarFieldEnum = (typeof ReportingPageScalarFieldEnum)[keyof typeof ReportingPageScalarFieldEnum]
 
 
 export const SortOrder = {
