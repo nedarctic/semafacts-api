@@ -8,6 +8,7 @@ import configuration from './config/configuration';
 import { validationSchema } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { CompaniesModule } from './companies/companies.module';
       }
     }),
     AuthModule,
-    CompaniesModule
+    CompaniesModule,
+    EmailModule
   ],
   controllers: [AppController],
   providers: [AppService],
