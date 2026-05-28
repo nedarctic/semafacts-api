@@ -19,7 +19,7 @@ export class UsersController {
 
     @Get(':id')
     getUser(@Param('id', new ParseUUIDPipe()) id: string) {
-        return this.usersService.findUserById(id);
+        return this.usersService.getUserById(id);
     }
 
     @Patch(':id')
