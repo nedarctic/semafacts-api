@@ -1,32 +1,54 @@
-import { Controller, Body, Post, Get, Delete, Param, Patch, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Body, Post, Get, Delete, Param, Patch, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRole } from '../generated/prisma/enums';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post()
     createUser(@Body() body: CreateUserDto) {
         return this.usersService.createUser(body);
     }
 
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get()
     getUsers() {
         return this.usersService.getUsers();
     }
 
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id')
+    getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
+        return this.usersService.getUserById(id);
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':id')
     getUser(@Param('id', new ParseUUIDPipe()) id: string) {
         return this.usersService.getUserById(id);
     }
 
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Patch(':id')
     updateUser(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: UpdateUserDto) {
         return this.usersService.updateUser(id, body);
     }
 
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Delete(':id')
     deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
         return this.usersService.deactivateUser(id);

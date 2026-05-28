@@ -16,11 +16,11 @@ export class CompaniesService {
     constructor(private configService: ConfigService, private prismaService: PrismaService) { }
 
     async createCompany(dto: CreateCompanyDto) {
-        await this.prismaService.company.create({ data: { ...dto } })
+        return await this.prismaService.company.create({ data: { ...dto } })
     }
 
     async updateCompany(id: string, dto: UpdateCompanyDto) {
-        await this.prismaService.company.update({ where: { id }, data: { ...dto } })
+        return await this.prismaService.company.update({ where: { id }, data: { ...dto } })
     }
 
     async getCompanyById(id: string) {
@@ -101,6 +101,7 @@ export class CompaniesService {
                 },
             },
         });
+        return company;
     }
 
     async addCategoriesToCompany(companyId: string, dto: AddCategoriesDto) {
@@ -119,7 +120,7 @@ export class CompaniesService {
             return company;
         }
 
-        await this.prismaService.company.update({
+        return await this.prismaService.company.update({
             where: { id: companyId },
             data: {
                 categories: {
@@ -142,7 +143,7 @@ export class CompaniesService {
             return company;
         }
 
-        await this.prismaService.company.update({
+        return await this.prismaService.company.update({
             where: { id: companyId },
             data: {
                 reportingPage: {
@@ -165,12 +166,12 @@ export class CompaniesService {
             throw new ReportingPageNotFoundException();
         }
 
-        await this.prismaService.company.update({
-            where: {id: companyId},
-            data: { 
-                reportingPage: { 
-                    update: { ...dto } 
-                } 
+        return await this.prismaService.company.update({
+            where: { id: companyId },
+            data: {
+                reportingPage: {
+                    update: { ...dto }
+                }
             }
         })
     }
@@ -189,13 +190,8 @@ export class CompaniesService {
             throw new CategoryNotFoundException();
         }
 
-        await this.prismaService.company.update({
-            where: { id: companyId },
-            data: {
-                categories: {
-                    disconnect: { id: categoryId },
-                },
-            },
+        return await this.prismaService.category.delete({
+            where: { id: categoryId },
         });
     }
 
@@ -213,7 +209,7 @@ export class CompaniesService {
             throw new CategoryNotFoundException();
         }
 
-        await this.prismaService.company.update({
+        return await this.prismaService.company.update({
             where: { id: companyId },
             data: {
                 categories: {

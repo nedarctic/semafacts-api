@@ -11,7 +11,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             throw new UnauthorizedException({ error: 'NO_TOKEN', message: 'Access token missing or malformed' });
         }
-        if (info.name === 'TokenExpiredError') {
+        if (info?.name === 'TokenExpiredError') {
             throw new UnauthorizedException({ error: 'TOKEN_EXPIRED', message: 'Access token expired' });
         }
         if (err || info || !user) {
