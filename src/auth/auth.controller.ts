@@ -28,7 +28,7 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Post('refresh')
-    async refresh(@Req() req, @Res({ passthrough: true }) res: Response) {
+    async refresh(@Req() req: ExpressRequest, @Res({ passthrough: true }) res: Response) {
         const refreshToken = req.cookies['refresh_token'];
         if (!refreshToken) {
             throw new UnauthorizedException('No refresh token provided');

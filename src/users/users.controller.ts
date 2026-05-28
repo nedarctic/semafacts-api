@@ -29,6 +29,6 @@ export class UsersController {
 
     @Delete(':id')
     deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
-        return this.usersService.removeUser(id);
+        return this.usersService.deactivateUser(id);
     }
 }

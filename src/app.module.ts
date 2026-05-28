@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation';
 import { AuthModule } from './auth/auth.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { AuthModule } from './auth/auth.module';
         abortEarly: true
       }
     }),
-    AuthModule
+    AuthModule,
+    CompaniesModule
   ],
   controllers: [AppController],
   providers: [AppService],
