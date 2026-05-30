@@ -59,3 +59,8 @@ export type Category = Prisma.CategoryModel
  * 
  */
 export type ReportingPage = Prisma.ReportingPageModel
+/**
+ * Model InviteToken
+ * 
+ */
+export type InviteToken = Prisma.InviteTokenModel

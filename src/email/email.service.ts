@@ -20,14 +20,15 @@ export class EmailService {
      * @param html - The HTML content of the email.
      * @returns A promise that resolves when the email is sent successfully.
      */
-    async sendEmail(to: string, subject: string, html: string): Promise<void> {
+    async sendEmail(to: string, subject: string, html: string): Promise<{ message: string }> {
         try {
             await this.resend.emails.send({
-                from: 'SemaFacts <nedarctic@gmail.com>',
+                from: 'SemaFacts <onboarding@resend.dev>',
                 to: to,
                 subject: subject,
                 html: html
             });
+            return { message: `Email sent to ${to}` };
         } catch (error) {
             this.logger.error('Error sending email:', error);
             throw new Error('Failed to send email');

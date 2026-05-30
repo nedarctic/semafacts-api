@@ -71,7 +71,7 @@ export class CompaniesController {
         return this.companiesService.getCompanyReportingPage(id);
     }
 
-    // add users to company - to be updated to use invites
+    // add users to company
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':id/users')

@@ -54,7 +54,8 @@ export const ModelName = {
   User: 'User',
   Company: 'Company',
   Category: 'Category',
-  ReportingPage: 'ReportingPage'
+  ReportingPage: 'ReportingPage',
+  InviteToken: 'InviteToken'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -121,6 +122,18 @@ export const ReportingPageScalarFieldEnum = {
 } as const
 
 export type ReportingPageScalarFieldEnum = (typeof ReportingPageScalarFieldEnum)[keyof typeof ReportingPageScalarFieldEnum]
+
+
+export const InviteTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  used: 'used',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InviteTokenScalarFieldEnum = (typeof InviteTokenScalarFieldEnum)[keyof typeof InviteTokenScalarFieldEnum]
 
 
 export const SortOrder = {

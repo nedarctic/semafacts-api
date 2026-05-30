@@ -9,6 +9,7 @@ import { validationSchema } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
 import { EmailModule } from './email/email.module';
+import { InvitesModule } from './invites/invites.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { EmailModule } from './email/email.module';
     }),
     AuthModule,
     CompaniesModule,
-    EmailModule
+    EmailModule,
+    InvitesModule
   ],
   controllers: [AppController],
   providers: [AppService],
