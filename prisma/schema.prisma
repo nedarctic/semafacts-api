@@ -85,3 +85,26 @@ enum UserStatus {
   ACTIVE
   INACTIVE
 }
+
+enum AttachmentUploader {
+  Reporter
+  Handler
+}
+
+enum SenderType {
+  Reporter
+  Handler
+}
+
+enum IncidentStatus {
+  New
+  InReview
+  Investigation
+  Resolved
+  Closed
+}
+
+enum ReporterType {
+  Anonymous
+  Confidential
+}

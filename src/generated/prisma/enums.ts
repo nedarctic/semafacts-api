@@ -25,3 +25,38 @@ export const UserStatus = {
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const AttachmentUploader = {
+  Reporter: 'Reporter',
+  Handler: 'Handler'
+} as const
+
+export type AttachmentUploader = (typeof AttachmentUploader)[keyof typeof AttachmentUploader]
+
+
+export const SenderType = {
+  Reporter: 'Reporter',
+  Handler: 'Handler'
+} as const
+
+export type SenderType = (typeof SenderType)[keyof typeof SenderType]
+
+
+export const IncidentStatus = {
+  New: 'New',
+  InReview: 'InReview',
+  Investigation: 'Investigation',
+  Resolved: 'Resolved',
+  Closed: 'Closed'
+} as const
+
+export type IncidentStatus = (typeof IncidentStatus)[keyof typeof IncidentStatus]
+
+
+export const ReporterType = {
+  Anonymous: 'Anonymous',
+  Confidential: 'Confidential'
+} as const
+
+export type ReporterType = (typeof ReporterType)[keyof typeof ReporterType]
