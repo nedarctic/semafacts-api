@@ -1,9 +1,8 @@
-import { Controller, Post, Body, Request, Req, Res, UseGuards, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { type Response, type Request as ExpressRequest } from 'express';
+import { Body, Controller, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -14,32 +13,22 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req, @Res({ passthrough: true }) res: Response) {
-        const { access_token, refresh_token } = await this.authService.login(req.user);
-        res.cookie('refresh_token', refresh_token, {
-            httpOnly: true,
-            secure: this.configService.get('node_env') === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+    async login(@Request() req: any) {
+        const user = req.user;
+        const { access_token, refresh_token } = await this.authService.login(user);
 
-        return { access_token };
+        return { user, access_token, refresh_token };
     }
 
     @UseGuards(JwtAuthGuard)
     @Post('refresh')
-    async refresh(@Req() req: ExpressRequest, @Res({ passthrough: true }) res: Response) {
-        const refreshToken = req.cookies['refresh_token'];
-        if (!refreshToken) {
+    async refresh(@Body() dto: { refreshToken: string }) {
+
+        if (!dto.refreshToken) {
             throw new UnauthorizedException('No refresh token provided');
         }
-        const { access_token, refresh_token: newRefreshToken } = await this.authService.refreshToken(refreshToken);
-        res.cookie('refresh_token', newRefreshToken, {
-            httpOnly: true,
-            secure: this.configService.get('node_env') === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
-        return { access_token };
+        const { access_token, refresh_token } = await this.authService.refreshToken(dto.refreshToken);
+
+        return { access_token, refresh_token };
     }
- }
+}

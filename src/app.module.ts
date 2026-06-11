@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
 import { EmailModule } from './email/email.module';
 import { InvitesModule } from './invites/invites.module';
+import { IncidentsModule } from './incidents/incidents.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { InvitesModule } from './invites/invites.module';
     AuthModule,
     CompaniesModule,
     EmailModule,
-    InvitesModule
+    InvitesModule,
+    IncidentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

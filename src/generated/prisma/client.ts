@@ -64,3 +64,8 @@ export type ReportingPage = Prisma.ReportingPageModel
  * 
  */
 export type InviteToken = Prisma.InviteTokenModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

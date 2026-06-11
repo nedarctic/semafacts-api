@@ -15,6 +15,14 @@ export class CompaniesController {
 
     constructor(private readonly companiesService: CompaniesService) { }
 
+    // get all companies
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
+    @Get()
+    getCompanies() {
+        return this.companiesService.getCompanies();
+    }
+
     // create new company
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN)
@@ -37,15 +45,7 @@ export class CompaniesController {
     @Get(':id')
     getCompanyById(@Param('id') id: string) {
         return this.companiesService.getCompanyById(id);
-    }
-
-    // get all companies
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN)
-    @Get()
-    getCompanies() {
-        return this.companiesService.getCompanies();
-    }
+    }    
 
     // get company users
     @UseGuards(RolesGuard)

@@ -18,12 +18,21 @@ export class AuthService {
         if (!user || !isMatch) {
             throw new UnauthorizedException('Invalid credentials');
         }
+
+        const {refreshToken, password, createdAt, updatedAt, ...rest } = user;
         
-        return user;
+        return rest;
     }
 
     async login(user: any){
-        const payload = { email: user.email, sub: user.id, role: user.role };
+        const payload = { 
+            email: user.email, 
+            id: user.id, 
+            role: user.role, 
+            name: user.name, 
+            status: user.status, 
+            companyId: user.companyId 
+        };
 
         const access_token: string = this.jwtService.sign(payload, { expiresIn: '1h' });
         const refresh_token: string = this.jwtService.sign(payload, { expiresIn: '7d' });
@@ -39,7 +48,7 @@ export class AuthService {
     async refreshToken(token: string){
         try {
             const payload = this.jwtService.verify(token);
-            const user = await this.usersService.getUserById(payload.sub);
+            const user = await this.usersService.getUserById(payload.id);
 
             if (!user || !user.refreshToken || !(await bcrypt.compare(token, user.refreshToken))) {
                 throw new UnauthorizedException('Invalid token');

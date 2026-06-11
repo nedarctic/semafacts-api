@@ -55,7 +55,8 @@ export const ModelName = {
   Company: 'Company',
   Category: 'Category',
   ReportingPage: 'ReportingPage',
-  InviteToken: 'InviteToken'
+  InviteToken: 'InviteToken',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -134,6 +135,16 @@ export const InviteTokenScalarFieldEnum = {
 } as const
 
 export type InviteTokenScalarFieldEnum = (typeof InviteTokenScalarFieldEnum)[keyof typeof InviteTokenScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  log: 'log',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {
