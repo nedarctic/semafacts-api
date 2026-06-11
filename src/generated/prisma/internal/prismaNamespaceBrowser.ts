@@ -96,6 +96,8 @@ export const CompanyScalarFieldEnum = {
   name: 'name',
   reportingLinkSlug: 'reportingLinkSlug',
   slaDays: 'slaDays',
+  logoKey: 'logoKey',
+  logoUrl: 'logoUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

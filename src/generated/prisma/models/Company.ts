@@ -29,6 +29,8 @@ export type CompanyMinAggregateOutputType = {
   name: string | null
   reportingLinkSlug: string | null
   slaDays: string | null
+  logoKey: string | null
+  logoUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +40,8 @@ export type CompanyMaxAggregateOutputType = {
   name: string | null
   reportingLinkSlug: string | null
   slaDays: string | null
+  logoKey: string | null
+  logoUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +51,8 @@ export type CompanyCountAggregateOutputType = {
   name: number
   reportingLinkSlug: number
   slaDays: number
+  logoKey: number
+  logoUrl: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +64,8 @@ export type CompanyMinAggregateInputType = {
   name?: true
   reportingLinkSlug?: true
   slaDays?: true
+  logoKey?: true
+  logoUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +75,8 @@ export type CompanyMaxAggregateInputType = {
   name?: true
   reportingLinkSlug?: true
   slaDays?: true
+  logoKey?: true
+  logoUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +86,8 @@ export type CompanyCountAggregateInputType = {
   name?: true
   reportingLinkSlug?: true
   slaDays?: true
+  logoKey?: true
+  logoUrl?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +170,8 @@ export type CompanyGroupByOutputType = {
   name: string
   reportingLinkSlug: string | null
   slaDays: string | null
+  logoKey: string | null
+  logoUrl: string | null
   createdAt: Date
   updatedAt: Date
   _count: CompanyCountAggregateOutputType | null
@@ -188,6 +202,8 @@ export type CompanyWhereInput = {
   name?: Prisma.StringFilter<"Company"> | string
   reportingLinkSlug?: Prisma.StringNullableFilter<"Company"> | string | null
   slaDays?: Prisma.StringNullableFilter<"Company"> | string | null
+  logoKey?: Prisma.StringNullableFilter<"Company"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   users?: Prisma.UserListRelationFilter
@@ -200,6 +216,8 @@ export type CompanyOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   reportingLinkSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   slaDays?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
@@ -215,6 +233,8 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Company"> | string
   reportingLinkSlug?: Prisma.StringNullableFilter<"Company"> | string | null
   slaDays?: Prisma.StringNullableFilter<"Company"> | string | null
+  logoKey?: Prisma.StringNullableFilter<"Company"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   users?: Prisma.UserListRelationFilter
@@ -227,6 +247,8 @@ export type CompanyOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   reportingLinkSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   slaDays?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompanyCountOrderByAggregateInput
@@ -242,6 +264,8 @@ export type CompanyScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Company"> | string
   reportingLinkSlug?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   slaDays?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
+  logoKey?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
+  logoUrl?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
 }
@@ -251,6 +275,8 @@ export type CompanyCreateInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -263,6 +289,8 @@ export type CompanyUncheckedCreateInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -275,6 +303,8 @@ export type CompanyUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -287,6 +317,8 @@ export type CompanyUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -299,6 +331,8 @@ export type CompanyCreateManyInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -308,6 +342,8 @@ export type CompanyUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -317,6 +353,8 @@ export type CompanyUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -331,6 +369,8 @@ export type CompanyCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   reportingLinkSlug?: Prisma.SortOrder
   slaDays?: Prisma.SortOrder
+  logoKey?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -340,6 +380,8 @@ export type CompanyMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   reportingLinkSlug?: Prisma.SortOrder
   slaDays?: Prisma.SortOrder
+  logoKey?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -349,6 +391,8 @@ export type CompanyMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   reportingLinkSlug?: Prisma.SortOrder
   slaDays?: Prisma.SortOrder
+  logoKey?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -407,6 +451,8 @@ export type CompanyCreateWithoutUsersInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -418,6 +464,8 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -445,6 +493,8 @@ export type CompanyUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -456,6 +506,8 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -467,6 +519,8 @@ export type CompanyCreateWithoutCategoriesInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -478,6 +532,8 @@ export type CompanyUncheckedCreateWithoutCategoriesInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -505,6 +561,8 @@ export type CompanyUpdateWithoutCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -516,6 +574,8 @@ export type CompanyUncheckedUpdateWithoutCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -527,6 +587,8 @@ export type CompanyCreateWithoutReportingPageInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutCompanyInput
@@ -538,6 +600,8 @@ export type CompanyUncheckedCreateWithoutReportingPageInput = {
   name: string
   reportingLinkSlug?: string | null
   slaDays?: string | null
+  logoKey?: string | null
+  logoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -565,6 +629,8 @@ export type CompanyUpdateWithoutReportingPageInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
@@ -576,6 +642,8 @@ export type CompanyUncheckedUpdateWithoutReportingPageInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   reportingLinkSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slaDays?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -627,6 +695,8 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   reportingLinkSlug?: boolean
   slaDays?: boolean
+  logoKey?: boolean
+  logoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   users?: boolean | Prisma.Company$usersArgs<ExtArgs>
@@ -640,6 +710,8 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   reportingLinkSlug?: boolean
   slaDays?: boolean
+  logoKey?: boolean
+  logoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["company"]>
@@ -649,6 +721,8 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   reportingLinkSlug?: boolean
   slaDays?: boolean
+  logoKey?: boolean
+  logoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["company"]>
@@ -658,11 +732,13 @@ export type CompanySelectScalar = {
   name?: boolean
   reportingLinkSlug?: boolean
   slaDays?: boolean
+  logoKey?: boolean
+  logoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "reportingLinkSlug" | "slaDays" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "reportingLinkSlug" | "slaDays" | "logoKey" | "logoUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Company$usersArgs<ExtArgs>
   categories?: boolean | Prisma.Company$categoriesArgs<ExtArgs>
@@ -684,6 +760,8 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     reportingLinkSlug: string | null
     slaDays: string | null
+    logoKey: string | null
+    logoUrl: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["company"]>
@@ -1116,6 +1194,8 @@ export interface CompanyFieldRefs {
   readonly name: Prisma.FieldRef<"Company", 'String'>
   readonly reportingLinkSlug: Prisma.FieldRef<"Company", 'String'>
   readonly slaDays: Prisma.FieldRef<"Company", 'String'>
+  readonly logoKey: Prisma.FieldRef<"Company", 'String'>
+  readonly logoUrl: Prisma.FieldRef<"Company", 'String'>
   readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Company", 'DateTime'>
 }

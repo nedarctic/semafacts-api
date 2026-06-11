@@ -28,6 +28,8 @@ model Company {
   name              String
   reportingLinkSlug String?
   slaDays           String?
+  logoKey           String?
+  logoUrl           String?
   users             User[]
   categories        Category[]
   reportingPage     ReportingPage?
