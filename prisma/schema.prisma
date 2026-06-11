@@ -9,23 +9,25 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid()) @db.Uuid
-  name         String?
-  email        String        @unique
-  password     String?
-  role         UserRole?     @default(HANDLER)
-  status       UserStatus?   @default(INACTIVE)
-  refreshToken String?
-  companyId    String?       @db.Uuid
-  company      Company?      @relation(fields: [companyId], references: [id])
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt()
-  inviteTokens InviteToken[]
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String?
+  email            String            @unique
+  password         String?
+  role             UserRole?         @default(HANDLER)
+  status           UserStatus?       @default(INACTIVE)
+  refreshToken     String?
+  companyId        String?           @db.Uuid
+  company          Company?          @relation(fields: [companyId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt()
+  inviteTokens     InviteToken[]
+  messages         Message[]
+  incidentHandlers IncidentHandler[]
 }
 
 model Company {
   id                String         @id @default(uuid()) @db.Uuid
-  name              String
+  name              String         @unique
   reportingLinkSlug String?
   slaDays           String?
   logoKey           String?
@@ -35,6 +37,8 @@ model Company {
   reportingPage     ReportingPage?
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt()
+  incidents         Incident[]
+  auditLogs         AuditLog[]
 }
 
 model Category {
@@ -68,10 +72,92 @@ model InviteToken {
 }
 
 model AuditLog {
-  id        String   @id @default(uuid()) @db.Uuid
-  log       String
-  details   String
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid()) @db.Uuid
+  log        String
+  details    String
+  companyId  String   @db.Uuid
+  company    Company  @relation(fields: [companyId], references: [id])
+  createdAt  DateTime @default(now())
+  incidentId String?  @db.Uuid
+}
+
+model Incident {
+  id                String            @id @default(uuid()) @db.Uuid
+  companyId         String            @db.Uuid
+  incidentIdDisplay String            @unique
+  category          String
+  description       String
+  location          String
+  involvedPeople    String?
+  incidentDate      DateTime
+  reporterType      ReporterType
+  status            IncidentStatus
+  secretCodeHash    String
+  deadlineAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  closedAt          DateTime?
+  duration          String?
+  attachments       Attachment[]
+  handlers          IncidentHandler[]
+  company           Company           @relation(fields: [companyId], references: [id])
+  messages          Message[]
+  reporter          Reporter?
+  secretCodes       SecretCode[]
+}
+
+model SecretCode {
+  id             String   @id @default(uuid()) @db.Uuid
+  incidentId     String   @db.Uuid
+  secretCodeHash String
+  createdAt      DateTime @default(now())
+  incident       Incident @relation(fields: [incidentId], references: [id])
+}
+
+model Message {
+  id         String     @id @default(uuid()) @db.Uuid
+  incidentId String     @db.Uuid
+  senderType SenderType
+  content    String
+  createdAt  DateTime   @default(now())
+  reporterId String?    @db.Uuid
+  userId     String?    @db.Uuid
+  incident   Incident   @relation(fields: [incidentId], references: [id])
+  reporter   Reporter?  @relation(fields: [reporterId], references: [id])
+  user       User?      @relation(fields: [userId], references: [id])
+}
+
+model Reporter {
+  id         String    @id @default(uuid()) @db.Uuid
+  incidentId String    @unique @db.Uuid
+  name       String?
+  email      String?
+  phone      String?
+  createdAt  DateTime  @default(now())
+  messages   Message[]
+  incident   Incident  @relation(fields: [incidentId], references: [id])
+}
+
+model IncidentHandler {
+  id         String   @id @default(uuid()) @db.Uuid
+  incidentId String   @db.Uuid
+  handlerId  String   @db.Uuid
+  assignedAt DateTime @default(now())
+  handler    User     @relation(fields: [handlerId], references: [id])
+  incident   Incident @relation(fields: [incidentId], references: [id])
+
+  @@unique([incidentId, handlerId])
+  @@map("incident_handlers")
+}
+
+model Attachment {
+  id         String             @id @default(uuid()) @db.Uuid
+  incidentId String             @db.Uuid
+  uploadedBy AttachmentUploader
+  fileKey    String
+  fileUrl    String
+  createdAt  DateTime           @default(now())
+  incident   Incident           @relation(fields: [incidentId], references: [id])
 }
 
 enum UserRole {

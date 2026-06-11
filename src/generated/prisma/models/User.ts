@@ -224,6 +224,8 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   inviteTokens?: Prisma.InviteTokenListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
+  incidentHandlers?: Prisma.IncidentHandlerListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -239,6 +241,8 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   inviteTokens?: Prisma.InviteTokenOrderByRelationAggregateInput
+  messages?: Prisma.MessageOrderByRelationAggregateInput
+  incidentHandlers?: Prisma.IncidentHandlerOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -257,6 +261,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   inviteTokens?: Prisma.InviteTokenListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
+  incidentHandlers?: Prisma.IncidentHandlerListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -303,6 +309,8 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
   inviteTokens?: Prisma.InviteTokenCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerCreateNestedManyWithoutHandlerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -317,6 +325,8 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutHandlerInput
 }
 
 export type UserUpdateInput = {
@@ -331,6 +341,8 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
   inviteTokens?: Prisma.InviteTokenUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUpdateManyWithoutHandlerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -345,6 +357,8 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutHandlerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -439,6 +453,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -515,6 +534,36 @@ export type UserUpdateOneRequiredWithoutInviteTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInviteTokensInput, Prisma.UserUpdateWithoutInviteTokensInput>, Prisma.UserUncheckedUpdateWithoutInviteTokensInput>
 }
 
+export type UserCreateNestedOneWithoutMessagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMessagesInput
+  upsert?: Prisma.UserUpsertWithoutMessagesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMessagesInput, Prisma.UserUpdateWithoutMessagesInput>, Prisma.UserUncheckedUpdateWithoutMessagesInput>
+}
+
+export type UserCreateNestedOneWithoutIncidentHandlersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutIncidentHandlersInput, Prisma.UserUncheckedCreateWithoutIncidentHandlersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIncidentHandlersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutIncidentHandlersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutIncidentHandlersInput, Prisma.UserUncheckedCreateWithoutIncidentHandlersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIncidentHandlersInput
+  upsert?: Prisma.UserUpsertWithoutIncidentHandlersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutIncidentHandlersInput, Prisma.UserUpdateWithoutIncidentHandlersInput>, Prisma.UserUncheckedUpdateWithoutIncidentHandlersInput>
+}
+
 export type UserCreateWithoutCompanyInput = {
   id?: string
   name?: string | null
@@ -526,6 +575,8 @@ export type UserCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   inviteTokens?: Prisma.InviteTokenCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerCreateNestedManyWithoutHandlerInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -539,6 +590,8 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutHandlerInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -594,6 +647,8 @@ export type UserCreateWithoutInviteTokensInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerCreateNestedManyWithoutHandlerInput
 }
 
 export type UserUncheckedCreateWithoutInviteTokensInput = {
@@ -607,6 +662,8 @@ export type UserUncheckedCreateWithoutInviteTokensInput = {
   companyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutHandlerInput
 }
 
 export type UserCreateOrConnectWithoutInviteTokensInput = {
@@ -636,6 +693,8 @@ export type UserUpdateWithoutInviteTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUpdateManyWithoutHandlerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInviteTokensInput = {
@@ -649,6 +708,160 @@ export type UserUncheckedUpdateWithoutInviteTokensInput = {
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutHandlerNestedInput
+}
+
+export type UserCreateWithoutMessagesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  password?: string | null
+  role?: $Enums.UserRole | null
+  status?: $Enums.UserStatus | null
+  refreshToken?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  inviteTokens?: Prisma.InviteTokenCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerCreateNestedManyWithoutHandlerInput
+}
+
+export type UserUncheckedCreateWithoutMessagesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  password?: string | null
+  role?: $Enums.UserRole | null
+  status?: $Enums.UserStatus | null
+  refreshToken?: string | null
+  companyId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutHandlerInput
+}
+
+export type UserCreateOrConnectWithoutMessagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+}
+
+export type UserUpsertWithoutMessagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMessagesInput, Prisma.UserUncheckedUpdateWithoutMessagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMessagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMessagesInput, Prisma.UserUncheckedUpdateWithoutMessagesInput>
+}
+
+export type UserUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  inviteTokens?: Prisma.InviteTokenUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUpdateManyWithoutHandlerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutHandlerNestedInput
+}
+
+export type UserCreateWithoutIncidentHandlersInput = {
+  id?: string
+  name?: string | null
+  email: string
+  password?: string | null
+  role?: $Enums.UserRole | null
+  status?: $Enums.UserStatus | null
+  refreshToken?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  inviteTokens?: Prisma.InviteTokenCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutIncidentHandlersInput = {
+  id?: string
+  name?: string | null
+  email: string
+  password?: string | null
+  role?: $Enums.UserRole | null
+  status?: $Enums.UserStatus | null
+  refreshToken?: string | null
+  companyId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutIncidentHandlersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutIncidentHandlersInput, Prisma.UserUncheckedCreateWithoutIncidentHandlersInput>
+}
+
+export type UserUpsertWithoutIncidentHandlersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutIncidentHandlersInput, Prisma.UserUncheckedUpdateWithoutIncidentHandlersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutIncidentHandlersInput, Prisma.UserUncheckedCreateWithoutIncidentHandlersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutIncidentHandlersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutIncidentHandlersInput, Prisma.UserUncheckedUpdateWithoutIncidentHandlersInput>
+}
+
+export type UserUpdateWithoutIncidentHandlersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  inviteTokens?: Prisma.InviteTokenUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutIncidentHandlersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -674,6 +887,8 @@ export type UserUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inviteTokens?: Prisma.InviteTokenUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUpdateManyWithoutHandlerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -687,6 +902,8 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  incidentHandlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutHandlerNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -708,10 +925,14 @@ export type UserUncheckedUpdateManyWithoutCompanyInput = {
 
 export type UserCountOutputType = {
   inviteTokens: number
+  messages: number
+  incidentHandlers: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inviteTokens?: boolean | UserCountOutputTypeCountInviteTokensArgs
+  messages?: boolean | UserCountOutputTypeCountMessagesArgs
+  incidentHandlers?: boolean | UserCountOutputTypeCountIncidentHandlersArgs
 }
 
 /**
@@ -731,6 +952,20 @@ export type UserCountOutputTypeCountInviteTokensArgs<ExtArgs extends runtime.Typ
   where?: Prisma.InviteTokenWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountIncidentHandlersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.IncidentHandlerWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -745,6 +980,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   inviteTokens?: boolean | Prisma.User$inviteTokensArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
+  incidentHandlers?: boolean | Prisma.User$incidentHandlersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -793,6 +1030,8 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   inviteTokens?: boolean | Prisma.User$inviteTokensArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
+  incidentHandlers?: boolean | Prisma.User$incidentHandlersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -807,6 +1046,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs> | null
     inviteTokens: Prisma.$InviteTokenPayload<ExtArgs>[]
+    messages: Prisma.$MessagePayload<ExtArgs>[]
+    incidentHandlers: Prisma.$IncidentHandlerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1215,6 +1456,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.User$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inviteTokens<T extends Prisma.User$inviteTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inviteTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InviteTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  incidentHandlers<T extends Prisma.User$incidentHandlersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$incidentHandlersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncidentHandlerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1695,6 +1938,54 @@ export type User$inviteTokensArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.InviteTokenScalarFieldEnum | Prisma.InviteTokenScalarFieldEnum[]
+}
+
+/**
+ * User.messages
+ */
+export type User$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
+  cursor?: Prisma.MessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * User.incidentHandlers
+ */
+export type User$incidentHandlersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the IncidentHandler
+   */
+  select?: Prisma.IncidentHandlerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the IncidentHandler
+   */
+  omit?: Prisma.IncidentHandlerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.IncidentHandlerInclude<ExtArgs> | null
+  where?: Prisma.IncidentHandlerWhereInput
+  orderBy?: Prisma.IncidentHandlerOrderByWithRelationInput | Prisma.IncidentHandlerOrderByWithRelationInput[]
+  cursor?: Prisma.IncidentHandlerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.IncidentHandlerScalarFieldEnum | Prisma.IncidentHandlerScalarFieldEnum[]
 }
 
 /**

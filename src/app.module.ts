@@ -11,6 +11,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { EmailModule } from './email/email.module';
 import { InvitesModule } from './invites/invites.module';
 import { IncidentsModule } from './incidents/incidents.module';
+import { R2Module } from './r2/r2.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { IncidentsModule } from './incidents/incidents.module';
     CompaniesModule,
     EmailModule,
     InvitesModule,
-    IncidentsModule
+    IncidentsModule,
+    R2Module
   ],
   controllers: [AppController],
   providers: [AppService],

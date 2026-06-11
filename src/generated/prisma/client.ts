@@ -69,3 +69,33 @@ export type InviteToken = Prisma.InviteTokenModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model Incident
+ * 
+ */
+export type Incident = Prisma.IncidentModel
+/**
+ * Model SecretCode
+ * 
+ */
+export type SecretCode = Prisma.SecretCodeModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
+/**
+ * Model Reporter
+ * 
+ */
+export type Reporter = Prisma.ReporterModel
+/**
+ * Model IncidentHandler
+ * 
+ */
+export type IncidentHandler = Prisma.IncidentHandlerModel
+/**
+ * Model Attachment
+ * 
+ */
+export type Attachment = Prisma.AttachmentModel

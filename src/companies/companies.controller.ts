@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, UseGuards, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, UseGuards, Patch, Delete, Logger, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { AddUsersDto } from './dto/add-users.dto';
@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../generated/prisma/enums';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AddCategoriesDto } from './dto/add-categories.dto';
 import { ReportingPageDto as CreateReportingPageDto } from './dto/reporting-page.dto';
 
@@ -13,13 +14,15 @@ import { ReportingPageDto as CreateReportingPageDto } from './dto/reporting-page
 @Controller('companies')
 export class CompaniesController {
 
+    private readonly logger = new Logger(CompaniesController.name)
+
     constructor(private readonly companiesService: CompaniesService) { }
 
     // get all companies
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN)
     @Get()
-    getCompanies() {
+    async getCompanies() {
         return this.companiesService.getCompanies();
     }
 
@@ -27,16 +30,8 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN)
     @Post()
-    createCompany(@Body() body: CreateCompanyDto) {
-        return this.companiesService.createCompany(body);
-    }
-
-    // update company details
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Patch(':id')
-    updateCompany(@Param('id') id: string, @Body() body: CreateCompanyDto) {
-        return this.companiesService.updateCompany(id, body);
+    async createCompany(@Body() dto: { name: string }) {
+        return this.companiesService.createCompany(dto.name);
     }
 
     // get company by id
@@ -45,21 +40,54 @@ export class CompaniesController {
     @Get(':id')
     getCompanyById(@Param('id') id: string) {
         return this.companiesService.getCompanyById(id);
+    }
+
+    // update company details
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @UseInterceptors(FileInterceptor('image'))
+    @Patch(':id')
+    async updateCompany(@UploadedFile() image: Express.Multer.File, @Param('id') id: string, @Body() dto: {name?: string, reportingLinkSlug?: string, slaDays?: string }) {
+        return this.companiesService.updateCompany(id, image, dto);
     }    
 
     // get company users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':id/users')
-    getCompanyUsers(@Param('id') id: string) {
+    async getCompanyUsers(@Param('id') id: string) {
         return this.companiesService.getCompanyUsers(id);
+    }
+
+    // get total company users
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-users')
+    async getTotalCompanyUsers(@Param('id') id: string) {
+        return this.companiesService.getTotalCompanyUsers(id);
+    }
+
+    // get company total incidents
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-incidents')
+    async getTotalCompanyIncidents(@Param('id') id: string) {
+        return this.companiesService.getTotalCompanyIncidents(id);
+    }
+
+    // get company audit logs
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/audit-logs')
+    async getCompanyAuditLogs(@Param('id') id: string) {
+        return this.companiesService.getCompanyAuditLogs(id);
     }
 
     // get company categories
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':id/categories')
-    getCompanyCategories(@Param('id') id: string) {
+    async getCompanyCategories(@Param('id') id: string) {
         return this.companiesService.getCompanyCategories(id);
     }
 
@@ -67,7 +95,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':id/reporting-page')
-    getCompanyReportingPage(@Param('id') id: string) {
+    async getCompanyReportingPage(@Param('id') id: string) {
         return this.companiesService.getCompanyReportingPage(id);
     }
 
@@ -75,7 +103,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':id/users')
-    addUsersToCompany(@Param('id') id: string, @Body() body: AddUsersDto) {
+    async addUsersToCompany(@Param('id') id: string, @Body() body: AddUsersDto) {
         return this.companiesService.addUsersToCompany(id, body);
     }
 
@@ -83,7 +111,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':id/categories')
-    addCategoriesToCompany(@Param('id') id: string, @Body() body: AddCategoriesDto) {
+    async addCategoriesToCompany(@Param('id') id: string, @Body() body: AddCategoriesDto) {
         return this.companiesService.addCategoriesToCompany(id, body);
     }
 
@@ -91,7 +119,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Patch(':id/categories/:categoryId')
-    updateCompanyCategory(@Param('id') id: string, @Param('categoryId') categoryId: string, @Body() body: { categoryName: string }) {
+    async updateCompanyCategory(@Param('id') id: string, @Param('categoryId') categoryId: string, @Body() body: { categoryName: string }) {
         return this.companiesService.updateCompanyCategory(id, categoryId, body.categoryName);
     }
 
@@ -99,7 +127,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Delete(':id/categories/:categoryId')
-    deleteCategoryFromCompany(@Param('id') id: string, @Param('categoryId') categoryId: string) {
+    async deleteCategoryFromCompany(@Param('id') id: string, @Param('categoryId') categoryId: string) {
         return this.companiesService.deleteCategoryFromCompany(id, categoryId);
     }
 
@@ -107,7 +135,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':id/reporting-page')
-    addReportingPageToCompany(@Param('id') id: string, @Body() body: CreateReportingPageDto) {
+    async addReportingPageToCompany(@Param('id') id: string, @Body() body: CreateReportingPageDto) {
         return this.companiesService.addReportingPageToCompany(id, body);
     }
 
@@ -115,7 +143,7 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Patch(':id/reporting-page/')
-    updateReportingPage(@Param('id') id: string, @Body() body: CreateReportingPageDto) {
+    async updateReportingPage(@Param('id') id: string, @Body() body: CreateReportingPageDto) {
         return this.companiesService.updateReportingPage(id, body);
     }
 }

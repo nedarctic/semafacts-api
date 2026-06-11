@@ -56,7 +56,13 @@ export const ModelName = {
   Category: 'Category',
   ReportingPage: 'ReportingPage',
   InviteToken: 'InviteToken',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  Incident: 'Incident',
+  SecretCode: 'SecretCode',
+  Message: 'Message',
+  Reporter: 'Reporter',
+  IncidentHandler: 'IncidentHandler',
+  Attachment: 'Attachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -143,10 +149,91 @@ export const AuditLogScalarFieldEnum = {
   id: 'id',
   log: 'log',
   details: 'details',
-  createdAt: 'createdAt'
+  companyId: 'companyId',
+  createdAt: 'createdAt',
+  incidentId: 'incidentId'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const IncidentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  incidentIdDisplay: 'incidentIdDisplay',
+  category: 'category',
+  description: 'description',
+  location: 'location',
+  involvedPeople: 'involvedPeople',
+  incidentDate: 'incidentDate',
+  reporterType: 'reporterType',
+  status: 'status',
+  secretCodeHash: 'secretCodeHash',
+  deadlineAt: 'deadlineAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  closedAt: 'closedAt',
+  duration: 'duration'
+} as const
+
+export type IncidentScalarFieldEnum = (typeof IncidentScalarFieldEnum)[keyof typeof IncidentScalarFieldEnum]
+
+
+export const SecretCodeScalarFieldEnum = {
+  id: 'id',
+  incidentId: 'incidentId',
+  secretCodeHash: 'secretCodeHash',
+  createdAt: 'createdAt'
+} as const
+
+export type SecretCodeScalarFieldEnum = (typeof SecretCodeScalarFieldEnum)[keyof typeof SecretCodeScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  incidentId: 'incidentId',
+  senderType: 'senderType',
+  content: 'content',
+  createdAt: 'createdAt',
+  reporterId: 'reporterId',
+  userId: 'userId'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const ReporterScalarFieldEnum = {
+  id: 'id',
+  incidentId: 'incidentId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  createdAt: 'createdAt'
+} as const
+
+export type ReporterScalarFieldEnum = (typeof ReporterScalarFieldEnum)[keyof typeof ReporterScalarFieldEnum]
+
+
+export const IncidentHandlerScalarFieldEnum = {
+  id: 'id',
+  incidentId: 'incidentId',
+  handlerId: 'handlerId',
+  assignedAt: 'assignedAt'
+} as const
+
+export type IncidentHandlerScalarFieldEnum = (typeof IncidentHandlerScalarFieldEnum)[keyof typeof IncidentHandlerScalarFieldEnum]
+
+
+export const AttachmentScalarFieldEnum = {
+  id: 'id',
+  incidentId: 'incidentId',
+  uploadedBy: 'uploadedBy',
+  fileKey: 'fileKey',
+  fileUrl: 'fileUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
 
 
 export const SortOrder = {
