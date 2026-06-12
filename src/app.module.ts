@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
-import { validationSchema } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
+import configuration from './config/configuration';
+import { validationSchema } from './config/validation';
 import { EmailModule } from './email/email.module';
-import { InvitesModule } from './invites/invites.module';
 import { IncidentsModule } from './incidents/incidents.module';
+import { InvitesModule } from './invites/invites.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { R2Module } from './r2/r2.module';
-import { AuditLogsModule } from './audit-logs/audit-logs.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -34,7 +33,6 @@ import { AuditLogsModule } from './audit-logs/audit-logs.module';
     InvitesModule,
     IncidentsModule,
     R2Module,
-    AuditLogsModule
   ],
   controllers: [AppController],
   providers: [AppService],
