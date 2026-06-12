@@ -12,6 +12,7 @@ import { EmailModule } from './email/email.module';
 import { InvitesModule } from './invites/invites.module';
 import { IncidentsModule } from './incidents/incidents.module';
 import { R2Module } from './r2/r2.module';
+import { AuditLogsModule } from './audit-logs/audit-logs.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { R2Module } from './r2/r2.module';
     EmailModule,
     InvitesModule,
     IncidentsModule,
-    R2Module
+    R2Module,
+    AuditLogsModule
   ],
   controllers: [AppController],
   providers: [AppService],
