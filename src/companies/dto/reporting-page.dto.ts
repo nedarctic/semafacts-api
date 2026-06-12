@@ -1,15 +1,19 @@
-import { IsOptional } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class ReportingPageDto {
-  @IsOptional() 
+  @IsOptional()
+  @IsString()
   title?: string;
 
-  @IsOptional() 
+  @IsOptional()
+  @IsString()
   introContent?: string;
 
-  @IsOptional() 
+  @IsOptional()
+  @IsString()
   policyUrl?: string;
 
-  @IsOptional() 
+  @IsOptional()
+  @IsString()
   reportingPageUrl?: string;
 }

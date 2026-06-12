@@ -11,6 +11,8 @@ import { ReportingPageNotFoundException } from './exceptions/reporting-page-not-
 import { CategoryNotFoundException } from './exceptions/category-not-found.exception';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { R2Service } from '../r2/r2.service';
+import { PaginationDto } from './dto/pagination.dto';
+import { CompanyWhereInput } from '../generated/prisma/models';
 
 @Injectable()
 export class CompaniesService {
@@ -22,13 +24,30 @@ export class CompaniesService {
         private readonly r2Service: R2Service
     ) { }
 
+    async createAuditLog(log: string, details: string, companyId: string) {
+        await this.prismaService.auditLog.create({
+            data: {
+                companyId,
+                log,
+                details
+            }
+        })
+    }
+
     async createCompany(name) {
-        return await this.prismaService.company.create({ data: { name } })
+        const res = await this.prismaService.company.create({ data: { name } });
+
+        // create reporting page
+        await this.prismaService.reportingPage.create({
+            data: {
+                companyId: res.id
+            }
+        })
+        await this.createAuditLog("Company added", `${res.name} successfully added to SemaFacts whistleblowing system`, res.id)
+        return res;
     }
 
     async updateCompany(id: string, image: Express.Multer.File, dto: { name?: string, reportingLinkSlug?: string, slaDays?: string }) {
-
-        this.logger.log('Company ID received:', id)
         const company = await this.prismaService.company.findUnique({
             where: { id }
         });
@@ -44,7 +63,7 @@ export class CompaniesService {
             imageUrl = publicUrl;
         }
 
-        return await this.prismaService.company.update({
+        const res = await this.prismaService.company.update({
             where: { id },
             data: {
                 name: dto.name,
@@ -53,14 +72,27 @@ export class CompaniesService {
                 logoKey: imageKey,
                 logoUrl: imageUrl,
             }
-        })
+        });
+
+        await this.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
+        return res;
     }
 
     async getCompanyById(id: string) {
+
         const company = await this.prismaService.company.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                reportingPage: {
+                    where: {
+                        companyId: id
+                    }
+                },
+                categories: true
+            },
         });
 
+        this.logger.log(`Company data: ${company}`)
         if (!company) {
             throw new CompanyNotFoundException();
         }
@@ -68,8 +100,61 @@ export class CompaniesService {
         return company;
     }
 
-    async getCompanies() {
-        return await this.prismaService.company.findMany({ include: { users: true } });
+    async getCompanies(pagination: PaginationDto) {
+        const {
+            page = 1,
+            limit = 10,
+            search
+        } = pagination;
+
+        const skip = (page - 1) * limit;
+
+        const where: CompanyWhereInput = search
+            ? {
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        reportingLinkSlug: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                ],
+            }
+            : {};
+
+        const [companies, total] = await Promise.all([
+            await this.prismaService.company.findMany({
+                skip,
+                take: limit,
+                where,
+                orderBy: {
+                    createdAt: "desc"
+                },
+                include: {
+                    users: true
+                }
+            }),
+            await this.prismaService.company.count({
+                where
+            }),
+        ])
+
+
+        return {
+            companies,
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        }
     }
 
     async getCompanyUsers(companyId: string) {
@@ -195,7 +280,7 @@ export class CompaniesService {
         return company;
     }
 
-    async addCategoriesToCompany(companyId: string, dto: AddCategoriesDto) {
+    async addCategoryToCompany(companyId: string, categoryName: string ) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId }, include: { categories: true },
         });
@@ -204,21 +289,15 @@ export class CompaniesService {
             throw new CompanyNotFoundException();
         }
 
-        const existingCategories = company.categories.map(c => c.categoryName.toLowerCase());
-        const newCategories = dto.categoryNames.filter(name => !existingCategories.includes(name.trim().toLowerCase()));
-
-        if (newCategories.length === 0) {
-            return company;
-        }
-
-        return await this.prismaService.company.update({
-            where: { id: companyId },
+        const res =  await this.prismaService.category.create({
             data: {
-                categories: {
-                    create: newCategories.map(name => ({ categoryName: name })),
-                },
-            },
+                companyId,
+                categoryName
+            }
         });
+
+        await this.createAuditLog("Category added", `${company.name} added a new category: ${categoryName}`, companyId)
+        return res;
     }
 
     async addReportingPageToCompany(companyId: string, dto: ReportingPageDto) {
@@ -234,7 +313,7 @@ export class CompaniesService {
             return company;
         }
 
-        return await this.prismaService.company.update({
+        const res = await this.prismaService.company.update({
             where: { id: companyId },
             data: {
                 reportingPage: {
@@ -242,29 +321,31 @@ export class CompaniesService {
                 },
             },
         });
+
+        await this.createAuditLog("Reporting page added", `Reporting page for ${res.name} successfully added`, res.id)
+        return res;
     }
 
     async updateReportingPage(companyId: string, dto: ReportingPageDto) {
         const company = await this.prismaService.company.findUnique({
-            where: { id: companyId }, include: { reportingPage: true },
+            where: { id: companyId },
         });
 
         if (!company) {
             throw new CompanyNotFoundException();
         }
 
-        if (!company.reportingPage) {
-            throw new ReportingPageNotFoundException();
-        }
-
-        return await this.prismaService.company.update({
-            where: { id: companyId },
+        const res = await this.prismaService.reportingPage.update({
+            where: {
+                companyId
+            },
             data: {
-                reportingPage: {
-                    update: { ...dto }
-                }
+                ...dto
             }
         })
+
+        await this.createAuditLog('Reporting page updated', `Reporting page for ${company.name} was successfully updated`, company.id)
+        return res;
     }
 
     async deleteCategoryFromCompany(companyId: string, categoryId: string) {
@@ -281,9 +362,12 @@ export class CompaniesService {
             throw new CategoryNotFoundException();
         }
 
-        return await this.prismaService.category.delete({
+        const res = await this.prismaService.category.delete({
             where: { id: categoryId },
         });
+
+        await this.createAuditLog("Category deleted", `${company.name} deleted the category name: ${res.categoryName}`, companyId);
+        return res;
     }
 
     async updateCompanyCategory(companyId: string, categoryId: string, categoryName: string) {
@@ -300,7 +384,7 @@ export class CompaniesService {
             throw new CategoryNotFoundException();
         }
 
-        return await this.prismaService.company.update({
+        const res = await this.prismaService.company.update({
             where: { id: companyId },
             data: {
                 categories: {
@@ -308,5 +392,8 @@ export class CompaniesService {
                 },
             },
         });
+
+        await this.createAuditLog("Category updated", `${company.name} successfully updated a category name`, res.id);
+        return res;
     }
 }

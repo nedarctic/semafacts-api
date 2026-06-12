@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, UseGuards, Patch, Delete, Logger, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, UseGuards, Patch, Delete, Logger, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { AddUsersDto } from './dto/add-users.dto';
@@ -8,7 +8,8 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../generated/prisma/enums';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AddCategoriesDto } from './dto/add-categories.dto';
-import { ReportingPageDto as CreateReportingPageDto } from './dto/reporting-page.dto';
+import { ReportingPageDto as CreateReportingPageDto, ReportingPageDto } from './dto/reporting-page.dto';
+import { PaginationDto } from './dto/pagination.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('companies')
@@ -22,8 +23,8 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN)
     @Get()
-    async getCompanies() {
-        return this.companiesService.getCompanies();
+    async getCompanies(@Query() pagination: PaginationDto) {
+        return this.companiesService.getCompanies(pagination);
     }
 
     // create new company
@@ -111,8 +112,8 @@ export class CompaniesController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':id/categories')
-    async addCategoriesToCompany(@Param('id') id: string, @Body() body: AddCategoriesDto) {
-        return this.companiesService.addCategoriesToCompany(id, body);
+    async addCategoriesToCompany(@Param('id') id: string, @Body() dto: {categoryName: string}) {
+        return this.companiesService.addCategoryToCompany(id, dto.categoryName);
     }
 
     // update company category name
@@ -142,8 +143,8 @@ export class CompaniesController {
     // update reporting page    
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Patch(':id/reporting-page/')
-    async updateReportingPage(@Param('id') id: string, @Body() body: CreateReportingPageDto) {
+    @Patch(':id/reporting-page')
+    async updateReportingPage(@Param('id') id: string, @Body() body: ReportingPageDto) {
         return this.companiesService.updateReportingPage(id, body);
     }
 }
