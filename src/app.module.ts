@@ -12,6 +12,8 @@ import { InvitesModule } from './invites/invites.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { R2Module } from './r2/r2.module';
 import { UsersModule } from './users/users.module';
+import { SecretCodeModule } from './secret-code/secret-code.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { UsersModule } from './users/users.module';
     InvitesModule,
     IncidentsModule,
     R2Module,
+    SecretCodeModule,
+    AuditLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

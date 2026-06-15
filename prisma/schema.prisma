@@ -16,7 +16,7 @@ model User {
   role             UserRole?         @default(HANDLER)
   status           UserStatus?       @default(INACTIVE)
   refreshToken     String?
-  companyId        String?           @db.Uuid
+  companyId        String            @db.Uuid
   company          Company?          @relation(fields: [companyId], references: [id])
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt()
@@ -85,13 +85,13 @@ model Incident {
   id                String            @id @default(uuid()) @db.Uuid
   companyId         String            @db.Uuid
   incidentIdDisplay String            @unique
-  category          String
-  description       String
-  location          String
+  category          String?
+  description       String?
+  location          String?
   involvedPeople    String?
-  incidentDate      DateTime
-  reporterType      ReporterType
-  status            IncidentStatus
+  incidentDate      DateTime?
+  reporterType      ReporterType      @default(Anonymous)
+  status            IncidentStatus    @default(New)
   secretCodeHash    String
   deadlineAt        DateTime?
   createdAt         DateTime          @default(now())

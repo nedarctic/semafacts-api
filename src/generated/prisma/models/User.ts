@@ -185,7 +185,7 @@ export type UserGroupByOutputType = {
   role: $Enums.UserRole | null
   status: $Enums.UserStatus | null
   refreshToken: string | null
-  companyId: string | null
+  companyId: string
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -219,7 +219,7 @@ export type UserWhereInput = {
   role?: Prisma.EnumUserRoleNullableFilter<"User"> | $Enums.UserRole | null
   status?: Prisma.EnumUserStatusNullableFilter<"User"> | $Enums.UserStatus | null
   refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
-  companyId?: Prisma.UuidNullableFilter<"User"> | string | null
+  companyId?: Prisma.UuidFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -236,7 +236,7 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  companyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -256,7 +256,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumUserRoleNullableFilter<"User"> | $Enums.UserRole | null
   status?: Prisma.EnumUserStatusNullableFilter<"User"> | $Enums.UserStatus | null
   refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
-  companyId?: Prisma.UuidNullableFilter<"User"> | string | null
+  companyId?: Prisma.UuidFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -273,7 +273,7 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  companyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -292,7 +292,7 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumUserRoleNullableWithAggregatesFilter<"User"> | $Enums.UserRole | null
   status?: Prisma.EnumUserStatusNullableWithAggregatesFilter<"User"> | $Enums.UserStatus | null
   refreshToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  companyId?: Prisma.UuidNullableWithAggregatesFilter<"User"> | string | null
+  companyId?: Prisma.UuidWithAggregatesFilter<"User"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -321,7 +321,7 @@ export type UserUncheckedCreateInput = {
   role?: $Enums.UserRole | null
   status?: $Enums.UserStatus | null
   refreshToken?: string | null
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
@@ -353,7 +353,7 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -369,7 +369,7 @@ export type UserCreateManyInput = {
   role?: $Enums.UserRole | null
   status?: $Enums.UserStatus | null
   refreshToken?: string | null
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -394,7 +394,7 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -631,7 +631,7 @@ export type UserScalarWhereInput = {
   role?: Prisma.EnumUserRoleNullableFilter<"User"> | $Enums.UserRole | null
   status?: Prisma.EnumUserStatusNullableFilter<"User"> | $Enums.UserStatus | null
   refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
-  companyId?: Prisma.UuidNullableFilter<"User"> | string | null
+  companyId?: Prisma.UuidFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -659,7 +659,7 @@ export type UserUncheckedCreateWithoutInviteTokensInput = {
   role?: $Enums.UserRole | null
   status?: $Enums.UserStatus | null
   refreshToken?: string | null
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
@@ -705,7 +705,7 @@ export type UserUncheckedUpdateWithoutInviteTokensInput = {
   role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -735,7 +735,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   role?: $Enums.UserRole | null
   status?: $Enums.UserStatus | null
   refreshToken?: string | null
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
@@ -781,7 +781,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -811,7 +811,7 @@ export type UserUncheckedCreateWithoutIncidentHandlersInput = {
   role?: $Enums.UserRole | null
   status?: $Enums.UserStatus | null
   refreshToken?: string | null
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedCreateNestedManyWithoutUserInput
@@ -857,7 +857,7 @@ export type UserUncheckedUpdateWithoutIncidentHandlersInput = {
   role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableEnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus | null
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inviteTokens?: Prisma.InviteTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -1057,7 +1057,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.UserRole | null
     status: $Enums.UserStatus | null
     refreshToken: string | null
-    companyId: string | null
+    companyId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>

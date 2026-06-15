@@ -1,12 +1,16 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserNotFoundException } from './exceptions/user-not-found.dto';
-
+import { userInfo } from 'os';
+import { PaginationDto } from '../common/pagination.dto';
+import { UserWhereInput } from '../generated/prisma/models';
+import { UserStatus, UserRole } from '../generated/prisma/enums';
 @Injectable()
 export class UsersService {
+    private readonly logger = new Logger();
     constructor(private readonly prisma: PrismaService) { }
 
     async createUser(dto: CreateUserDto) {
@@ -43,8 +47,103 @@ export class UsersService {
         return user;
     }
 
-    async getUsers() {
-        return await this.prisma.user.findMany();
+    async getUsers(pagination: PaginationDto) {
+
+        const {
+            page = 1,
+            limit = 10,
+            search
+        } = pagination;
+
+
+        const skip = (page - 1) * limit;
+
+        const searchUpper = search?.toUpperCase();
+
+        const roleMatch = Object.values(UserRole)
+            .includes(searchUpper as UserRole) ?
+            (searchUpper as UserRole) :
+            undefined;
+
+        const statusMatch = Object.values(UserStatus)
+            .includes(searchUpper as UserStatus) ?
+            (searchUpper as UserStatus) :
+            undefined;
+
+        const where: UserWhereInput = {
+            ...(search && {
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: 'insensitive'
+                        }
+                    },
+                    {
+                        email: {
+                            contains: search,
+                            mode: 'insensitive'
+                        }
+                    },
+                    {
+                        company: {
+                            name: {
+                                contains: search,
+                                mode: 'insensitive'
+                            }
+                        }
+                    }
+                ]
+            }),
+
+            ...(roleMatch && {
+                role: {
+                    equals: roleMatch
+                }
+            }),
+
+            ...(statusMatch && {
+                status: {
+                    equals: statusMatch
+                }
+            })
+        };
+
+        const [usersData, total] = await Promise.all([
+            await this.prisma.user.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: {
+                    createdAt: "desc"
+                },
+                include: {
+                    company: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }),
+            await this.prisma.user.count({
+                where
+            })
+        ])
+
+        const users = usersData.map(({ company, ...user }) => ({
+            ...user,
+            companyName: company?.name
+        }))
+
+        return {
+            users,
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        }
     }
 
     async updateUser(id: string, dto: UpdateUserDto) {

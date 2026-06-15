@@ -9,7 +9,7 @@ import { UserRole } from '../generated/prisma/enums';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AddCategoriesDto } from './dto/add-categories.dto';
 import { ReportingPageDto as CreateReportingPageDto, ReportingPageDto } from './dto/reporting-page.dto';
-import { PaginationDto } from './dto/pagination.dto';
+import { PaginationDto } from '../common/pagination.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('companies')

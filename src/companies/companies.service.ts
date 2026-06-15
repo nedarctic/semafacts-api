@@ -1,38 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { CreateCompanyDto } from './dto/create-company.dto';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { PaginationDto } from '../common/pagination.dto';
+import { CompanyWhereInput } from '../generated/prisma/models';
 import { PrismaService } from '../prisma/prisma.service';
+import { R2Service } from '../r2/r2.service';
 import { AddUsersDto } from './dto/add-users.dto';
+import { ReportingPageDto } from './dto/reporting-page.dto';
+import { CategoryNotFoundException } from './exceptions/category-not-found.exception';
 import { CompanyNotFoundException } from './exceptions/company-not-found.exception';
 import { UsersNotFoundException } from './exceptions/users-not-found.exception';
-import { ReportingPageDto } from './dto/reporting-page.dto';
-import { AddCategoriesDto } from './dto/add-categories.dto';
-import { ReportingPageNotFoundException } from './exceptions/reporting-page-not-found.exception';
-import { CategoryNotFoundException } from './exceptions/category-not-found.exception';
-import { UpdateCompanyDto } from './dto/update-company.dto';
-import { R2Service } from '../r2/r2.service';
-import { PaginationDto } from './dto/pagination.dto';
-import { CompanyWhereInput } from '../generated/prisma/models';
 
 @Injectable()
 export class CompaniesService {
 
     private readonly logger = new Logger(CompaniesService.name)
     constructor(
-        private readonly configService: ConfigService,
+        private readonly auditLog: AuditLogService,
         private readonly prismaService: PrismaService,
         private readonly r2Service: R2Service
     ) { }
-
-    async createAuditLog(log: string, details: string, companyId: string) {
-        await this.prismaService.auditLog.create({
-            data: {
-                companyId,
-                log,
-                details
-            }
-        })
-    }
 
     async createCompany(name) {
         const res = await this.prismaService.company.create({ data: { name } });
@@ -43,7 +29,7 @@ export class CompaniesService {
                 companyId: res.id
             }
         })
-        await this.createAuditLog("Company added", `${res.name} successfully added to SemaFacts whistleblowing system`, res.id)
+        await this.auditLog.createAuditLog("Company added", `${res.name} successfully added to SemaFacts whistleblowing system`, res.id)
         return res;
     }
 
@@ -74,7 +60,7 @@ export class CompaniesService {
             }
         });
 
-        await this.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
+        await this.auditLog.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
         return res;
     }
 
@@ -296,7 +282,7 @@ export class CompaniesService {
             }
         });
 
-        await this.createAuditLog("Category added", `${company.name} added a new category: ${categoryName}`, companyId)
+        await this.auditLog.createAuditLog("Category added", `${company.name} added a new category: ${categoryName}`, companyId)
         return res;
     }
 
@@ -322,7 +308,7 @@ export class CompaniesService {
             },
         });
 
-        await this.createAuditLog("Reporting page added", `Reporting page for ${res.name} successfully added`, res.id)
+        await this.auditLog.createAuditLog("Reporting page added", `Reporting page for ${res.name} successfully added`, res.id)
         return res;
     }
 
@@ -344,7 +330,7 @@ export class CompaniesService {
             }
         })
 
-        await this.createAuditLog('Reporting page updated', `Reporting page for ${company.name} was successfully updated`, company.id)
+        await this.auditLog.createAuditLog('Reporting page updated', `Reporting page for ${company.name} was successfully updated`, company.id)
         return res;
     }
 
@@ -366,7 +352,7 @@ export class CompaniesService {
             where: { id: categoryId },
         });
 
-        await this.createAuditLog("Category deleted", `${company.name} deleted the category name: ${res.categoryName}`, companyId);
+        await this.auditLog.createAuditLog("Category deleted", `${company.name} deleted the category name: ${res.categoryName}`, companyId);
         return res;
     }
 
@@ -393,7 +379,7 @@ export class CompaniesService {
             },
         });
 
-        await this.createAuditLog("Category updated", `${company.name} successfully updated a category name`, res.id);
+        await this.auditLog.createAuditLog("Category updated", `${company.name} successfully updated a category name`, res.id);
         return res;
     }
 }

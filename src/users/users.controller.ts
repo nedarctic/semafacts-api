@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Get, Delete, Param, Patch, ParseUUIDPipe, UseGuards } from '@nestjs/common';
+import { Controller, Body, Post, Get, Delete, Param, Patch, ParseUUIDPipe, UseGuards, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../generated/prisma/enums';
+import { PaginationDto } from '../common/pagination.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -19,11 +20,12 @@ export class UsersController {
         return this.usersService.createUser(body);
     }
 
+    // get users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get()
-    getUsers() {
-        return this.usersService.getUsers();
+    getUsers(@Query() pagination: PaginationDto) {
+        return this.usersService.getUsers(pagination);
     }
 
     @UseGuards(RolesGuard)
