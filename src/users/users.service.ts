@@ -1,28 +1,20 @@
-import { Injectable, UseGuards, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { PaginationDto } from '../common/pagination.dto';
+import { UserRole, UserStatus } from '../generated/prisma/enums';
+import { UserWhereInput } from '../generated/prisma/models';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt';
 import { UserNotFoundException } from './exceptions/user-not-found.dto';
-import { userInfo } from 'os';
-import { PaginationDto } from '../common/pagination.dto';
-import { UserWhereInput } from '../generated/prisma/models';
-import { UserStatus, UserRole } from '../generated/prisma/enums';
+
 @Injectable()
 export class UsersService {
     private readonly logger = new Logger();
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService
+    ) { }
 
-    async createUser(dto: CreateUserDto) {
-        const hashedPassword = await bcrypt.hash(dto.password, 10);
-        dto.password = hashedPassword;
-        return await this.prisma.user.create({ data: { ...dto } })
-    }
-
-    async deactivateUser(id: string) {
-        return await this.prisma.user.update({ where: { id }, data: { status: 'INACTIVE' } })
-    }
-
+    // get user by id
     async getUserById(id: string) {
         const user = await this.prisma.user.findUnique({
             where: { id },
@@ -35,6 +27,7 @@ export class UsersService {
         return user;
     }
 
+    // get user by email
     async getUserByEmail(email: string) {
         const user = await this.prisma.user.findUnique({
             where: { email },
@@ -47,6 +40,7 @@ export class UsersService {
         return user;
     }
 
+    // get users
     async getUsers(pagination: PaginationDto) {
 
         const {
@@ -146,6 +140,14 @@ export class UsersService {
         }
     }
 
+    // create a user
+    async createUser(dto: CreateUserDto) {
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+        dto.password = hashedPassword;
+        return await this.prisma.user.create({ data: { ...dto } })
+    }
+
+    // update a user
     async updateUser(id: string, dto: UpdateUserDto) {
         try {
             const hashedPassword = dto.password ? await bcrypt.hash(dto.password, 10) : undefined;
@@ -159,5 +161,10 @@ export class UsersService {
         } catch (e) {
             throw new UserNotFoundException();
         }
+    }
+
+    // deactivate a user
+    async deactivateUser(id: string) {
+        return await this.prisma.user.update({ where: { id }, data: { status: 'INACTIVE' } })
     }
 }

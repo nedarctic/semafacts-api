@@ -1,16 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { CreateIncidentDto } from './dto/create-incident.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { SecretCodeService } from '../secret-code/secret-code.service';
-import { IncidentNotFoundException } from './exceptions/incident-not-found.exception';
+import { Injectable, Logger } from '@nestjs/common';
 import { AuditLogService } from '../audit-log/audit-log.service';
-import { R2Service } from '../r2/r2.service';
 import { PaginationDto } from '../common/pagination.dto';
 import { IncidentWhereInput } from '../generated/prisma/models';
+import { PrismaService } from '../prisma/prisma.service';
+import { R2Service } from '../r2/r2.service';
+import { SecretCodeService } from '../secret-code/secret-code.service';
+import { CreateIncidentDto } from './dto/create-incident.dto';
 import { UpdateIncidentDto } from './dto/update-incident.dto';
+import { IncidentNotFoundException } from './exceptions/incident-not-found.exception';
+import { CompanyNotFoundException } from '../companies/exceptions/company-not-found.exception';
 
 @Injectable()
 export class IncidentsService {
+
+    private readonly logger = new Logger(IncidentsService.name)
     constructor(
         private readonly prisma: PrismaService,
         private readonly secretCodeService: SecretCodeService,
@@ -18,6 +21,7 @@ export class IncidentsService {
         private readonly r2: R2Service,
     ) { }
 
+    // get incidents
     async getIncidents(pagination: PaginationDto) {
 
         const {
@@ -83,9 +87,83 @@ export class IncidentsService {
         }
     }
 
+    // get company incidents
+    async getCompanyIncidents(companyId: string) {
+        try {
+
+            const company = await this.prisma.company.findUnique({ where: { id: companyId } });
+            if (!company) throw new CompanyNotFoundException();
+
+            const res = await this.prisma.incident.findMany({ where: { companyId } });
+
+            return res;
+        } catch (error) {
+            throw new Error(String(error));
+        }
+    }
+
+    // get company incident handlers
+    async getCompanyIncidentHandlers(incidentId: string) {
+        try {
+
+            const incident = await this.prisma.incident.findUnique({ where: { id: incidentId } });
+            if (!incident) throw new IncidentNotFoundException(incidentId);
+
+            const res = await this.prisma.incident.findUnique({
+                where: {
+                    id: incidentId
+                },
+                select: {
+                    handlers: true
+                }
+            })
+
+            return res;
+        } catch (error) {
+            throw new Error(String(error));
+        }
+    }
+
+    // get incident by ID
+    async getIncident(incidentId: string) {
+
+        const incident = await this.prisma.incident.findUnique({
+            where: {
+                id: incidentId
+            },
+            include: {
+                company: true,
+                attachments: true,
+                handlers: true,
+                messages: true,
+                reporter: true
+            }
+        });
+
+        this.logger.log(`INCIDENT DATA ${incident}`)
+
+        if (!incident) {
+            throw new IncidentNotFoundException(incidentId);
+        }
+
+        return incident;
+    }
+
+    // create new incident
     async createIncident(companyId: string, attachments: Express.Multer.File[], dto: CreateIncidentDto) {
 
         try {
+
+            // get sla days for company
+            const company = await this.prisma.company.findUnique({
+                where: { id: companyId },
+            })
+
+            if (!company) {
+                throw new CompanyNotFoundException();
+            }
+
+            const { slaDays } = company;
 
             // get id for display and secret code
             const { code, secretCode } = this.secretCodeService.generateCodes();
@@ -101,7 +179,8 @@ export class IncidentsService {
                     ...dto,
                     companyId,
                     incidentIdDisplay: code,
-                    secretCodeHash: hashedSecret
+                    secretCodeHash: hashedSecret,
+                    deadlineAt: slaDays ? new Date(Date.now() + parseInt(slaDays) * 24 * 60 * 60 * 1000) : null
                 }
             })
 
@@ -116,7 +195,8 @@ export class IncidentsService {
                             fileKey: key,
                             fileUrl: publicUrl,
                             incidentId: createdIncident.id,
-                            uploadedBy: "Reporter"
+                            uploadedBy: "Reporter",
+                            mimeType: file.mimetype
                         }
                     });
                 }
@@ -133,28 +213,7 @@ export class IncidentsService {
         }
     }
 
-    async getIncident(incidentId: string) {
-
-        const incident = await this.prisma.incident.findUnique({
-            where: {
-                id: incidentId
-            },
-            include: {
-                company: true,
-                attachments: true,
-                handlers: true,
-                messages: true,
-                reporter: true
-            }
-        });
-
-        if (!incident) {
-            throw new IncidentNotFoundException(incidentId);
-        }
-
-        return incident;
-    }
-
+    // update an incident
     async updateIncident(incidentId: string, attachments: Express.Multer.File[], dto: UpdateIncidentDto) {
         const incident = await this.prisma.incident.findUnique({ where: { id: incidentId } });
 
@@ -189,9 +248,48 @@ export class IncidentsService {
                     });
                 }
             }
+            // log update
+            await this.auditLog.createAuditLog('Incident updated', `Incident ID ${updatedIncident.incidentIdDisplay} just got updated`, updatedIncident.companyId)
 
             // return updated incident
             return updatedIncident;
+        } catch (error) {
+            throw new Error(String(error))
+        }
+    }
+
+    // delete an incident
+    async deleteIncident(incidentId: string) {
+
+        try {
+            // verify incident exists
+            const incident = await this.prisma.incident.findUnique({
+                where: {
+                    id: incidentId
+                }
+            })
+
+            if (!incident) throw new IncidentNotFoundException(incidentId);
+
+            // find attachment keys
+            const keys = await this.prisma.attachment.findMany({
+                where: {
+                    incidentId
+                },
+                select: {
+                    fileKey: true,
+                }
+            })
+
+            // remove incident from database
+            const res = await this.prisma.incident.delete({ where: { id: incidentId } })
+
+            // delete remote assets
+            for (const key in keys) {
+                await this.r2.deleteFile(key)
+            }
+
+            return res;
         } catch (error) {
             throw new Error(String(error))
         }

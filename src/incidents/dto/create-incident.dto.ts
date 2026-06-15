@@ -20,8 +20,6 @@ export class CreateIncidentDto {
   duration!: string;
 
   @IsString()
-  @Transform(({value}) => (new Date(value)))
-  @IsDate()
   incidentDate!: string;
 
   @IsNotEmpty()

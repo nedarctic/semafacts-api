@@ -220,7 +220,7 @@ export type SecretCodeCreateInput = {
   id?: string
   secretCodeHash: string
   createdAt?: Date | string
-  incident: Prisma.IncidentCreateNestedOneWithoutSecretCodesInput
+  incident: Prisma.IncidentCreateNestedOneWithoutSecretCodeInput
 }
 
 export type SecretCodeUncheckedCreateInput = {
@@ -234,7 +234,7 @@ export type SecretCodeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  incident?: Prisma.IncidentUpdateOneRequiredWithoutSecretCodesNestedInput
+  incident?: Prisma.IncidentUpdateOneRequiredWithoutSecretCodeNestedInput
 }
 
 export type SecretCodeUncheckedUpdateInput = {

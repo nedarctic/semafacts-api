@@ -9,6 +9,7 @@ import { ReportingPageDto } from './dto/reporting-page.dto';
 import { CategoryNotFoundException } from './exceptions/category-not-found.exception';
 import { CompanyNotFoundException } from './exceptions/company-not-found.exception';
 import { UsersNotFoundException } from './exceptions/users-not-found.exception';
+import { UserRole } from '../generated/prisma/enums';
 
 @Injectable()
 export class CompaniesService {
@@ -20,50 +21,7 @@ export class CompaniesService {
         private readonly r2Service: R2Service
     ) { }
 
-    async createCompany(name) {
-        const res = await this.prismaService.company.create({ data: { name } });
-
-        // create reporting page
-        await this.prismaService.reportingPage.create({
-            data: {
-                companyId: res.id
-            }
-        })
-        await this.auditLog.createAuditLog("Company added", `${res.name} successfully added to SemaFacts whistleblowing system`, res.id)
-        return res;
-    }
-
-    async updateCompany(id: string, image: Express.Multer.File, dto: { name?: string, reportingLinkSlug?: string, slaDays?: string }) {
-        const company = await this.prismaService.company.findUnique({
-            where: { id }
-        });
-
-        if (!company) {
-            throw new CompanyNotFoundException();
-        }
-
-        let imageKey, imageUrl;
-        if (image instanceof File && image.size > 0) {
-            const { key, publicUrl } = await this.r2Service.uploadFile(image, 'logos')
-            imageKey = key;
-            imageUrl = publicUrl;
-        }
-
-        const res = await this.prismaService.company.update({
-            where: { id },
-            data: {
-                name: dto.name,
-                reportingLinkSlug: dto.reportingLinkSlug,
-                slaDays: dto.slaDays,
-                logoKey: imageKey,
-                logoUrl: imageUrl,
-            }
-        });
-
-        await this.auditLog.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
-        return res;
-    }
-
+    // get company by id
     async getCompanyById(id: string) {
 
         const company = await this.prismaService.company.findUnique({
@@ -86,6 +44,7 @@ export class CompaniesService {
         return company;
     }
 
+    // get all companies
     async getCompanies(pagination: PaginationDto) {
         const {
             page = 1,
@@ -143,6 +102,7 @@ export class CompaniesService {
         }
     }
 
+    // get a company's users
     async getCompanyUsers(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -156,6 +116,7 @@ export class CompaniesService {
         return company.users;
     }
 
+    // get the total users of a company
     async getTotalCompanyUsers(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -175,6 +136,7 @@ export class CompaniesService {
         return company._count.users;
     }
 
+    // get the total incidents of a company
     async getTotalCompanyIncidents(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -194,6 +156,7 @@ export class CompaniesService {
         return company._count.incidents;
     }
 
+    // get a company's audit logs
     async getCompanyAuditLogs(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -214,6 +177,7 @@ export class CompaniesService {
         return company.auditLogs;
     }
 
+    // get a company's reporting categories
     async getCompanyCategories(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -227,6 +191,7 @@ export class CompaniesService {
         return company.categories;
     }
 
+    // get a company's reporting page
     async getCompanyReportingPage(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -240,6 +205,71 @@ export class CompaniesService {
         return company.reportingPage;
     }
 
+    // get a company's handlers
+    async getCompanyHandlers(companyId: string) {
+
+        this.logger.log(`Company ID received: ${companyId}`)
+        try {
+            const company = await this.prismaService.company.findUnique({ where: { id: companyId } })
+
+            if (!company) throw new CompanyNotFoundException();
+
+            const companyHandlers = await this.prismaService.company.findUnique({
+                where: {
+                    id: companyId
+                },
+                select: {
+                    users: {
+                        where: {
+                            role: UserRole.HANDLER
+                        }
+                    }
+                }
+            })
+
+            return companyHandlers;
+        } catch (error) {
+            throw new Error(String(error));
+        }
+    }
+
+    // get a company's incidents
+    async getCompanyIncidents(companyId: string) {
+        try {
+            const company = await this.prismaService.company.findUnique({ where: { id: companyId } })
+
+            if (!company) throw new CompanyNotFoundException();
+
+            const incidents = await this.prismaService.company.findUnique({
+                where: {
+                    id: companyId
+                },
+                select: {
+                    incidents: true
+                }
+            })
+
+            return incidents;
+        } catch (error) {
+            throw new Error(String(error));
+        }
+    }
+
+    // create a new company
+    async createCompany(name) {
+        const res = await this.prismaService.company.create({ data: { name } });
+
+        // create reporting page
+        await this.prismaService.reportingPage.create({
+            data: {
+                companyId: res.id
+            }
+        })
+        await this.auditLog.createAuditLog("Company added", `${res.name} successfully added to SemaFacts whistleblowing system`, res.id)
+        return res;
+    }
+
+    // add users to a company
     async addUsersToCompany(companyId: string, dto: AddUsersDto) {
         const userIds = dto.userIds;
         const company = await this.prismaService.company.findUnique({ where: { id: companyId } });
@@ -266,7 +296,8 @@ export class CompaniesService {
         return company;
     }
 
-    async addCategoryToCompany(companyId: string, categoryName: string ) {
+    // add a category to a company
+    async addCategoryToCompany(companyId: string, categoryName: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId }, include: { categories: true },
         });
@@ -275,7 +306,7 @@ export class CompaniesService {
             throw new CompanyNotFoundException();
         }
 
-        const res =  await this.prismaService.category.create({
+        const res = await this.prismaService.category.create({
             data: {
                 companyId,
                 categoryName
@@ -286,6 +317,7 @@ export class CompaniesService {
         return res;
     }
 
+    // add a reporting page to a company
     async addReportingPageToCompany(companyId: string, dto: ReportingPageDto) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId }, include: { reportingPage: true },
@@ -312,6 +344,7 @@ export class CompaniesService {
         return res;
     }
 
+    // update a company's reporting page
     async updateReportingPage(companyId: string, dto: ReportingPageDto) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
@@ -334,28 +367,39 @@ export class CompaniesService {
         return res;
     }
 
-    async deleteCategoryFromCompany(companyId: string, categoryId: string) {
+    // update a company's general info
+    async updateCompany(id: string, image: Express.Multer.File, dto: { name?: string, reportingLinkSlug?: string, slaDays?: string }) {
         const company = await this.prismaService.company.findUnique({
-            where: { id: companyId }, include: { categories: true },
+            where: { id }
         });
 
         if (!company) {
             throw new CompanyNotFoundException();
         }
 
-        const category = company.categories.find(c => c.id === categoryId);
-        if (!category) {
-            throw new CategoryNotFoundException();
+        let imageKey, imageUrl;
+        if (image instanceof File && image.size > 0) {
+            const { key, publicUrl } = await this.r2Service.uploadFile(image, 'logos')
+            imageKey = key;
+            imageUrl = publicUrl;
         }
 
-        const res = await this.prismaService.category.delete({
-            where: { id: categoryId },
+        const res = await this.prismaService.company.update({
+            where: { id },
+            data: {
+                name: dto.name,
+                reportingLinkSlug: dto.reportingLinkSlug,
+                slaDays: dto.slaDays,
+                logoKey: imageKey,
+                logoUrl: imageUrl,
+            }
         });
 
-        await this.auditLog.createAuditLog("Category deleted", `${company.name} deleted the category name: ${res.categoryName}`, companyId);
+        await this.auditLog.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
         return res;
     }
 
+    // update a specific company's reporting category
     async updateCompanyCategory(companyId: string, categoryId: string, categoryName: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId }, include: { categories: true },
@@ -382,4 +426,31 @@ export class CompaniesService {
         await this.auditLog.createAuditLog("Category updated", `${company.name} successfully updated a category name`, res.id);
         return res;
     }
+
+    // delete a company's category
+    async deleteCategoryFromCompany(companyId: string, categoryId: string) {
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId }, include: { categories: true },
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        const category = company.categories.find(c => c.id === categoryId);
+        if (!category) {
+            throw new CategoryNotFoundException();
+        }
+
+        const res = await this.prismaService.category.delete({
+            where: { id: categoryId },
+        });
+
+        await this.auditLog.createAuditLog("Category deleted", `${company.name} deleted the category name: ${res.categoryName}`, companyId);
+        return res;
+    }
+
+
+
+
 }

@@ -14,6 +14,8 @@ import { R2Module } from './r2/r2.module';
 import { UsersModule } from './users/users.module';
 import { SecretCodeModule } from './secret-code/secret-code.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
+import { HandlersModule } from './handlers/handlers.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     R2Module,
     SecretCodeModule,
     AuditLogModule,
+    HandlersModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

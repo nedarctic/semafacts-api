@@ -32,7 +32,7 @@ export type IncidentMinAggregateOutputType = {
   description: string | null
   location: string | null
   involvedPeople: string | null
-  incidentDate: Date | null
+  incidentDate: string | null
   reporterType: $Enums.ReporterType | null
   status: $Enums.IncidentStatus | null
   secretCodeHash: string | null
@@ -51,7 +51,7 @@ export type IncidentMaxAggregateOutputType = {
   description: string | null
   location: string | null
   involvedPeople: string | null
-  incidentDate: Date | null
+  incidentDate: string | null
   reporterType: $Enums.ReporterType | null
   status: $Enums.IncidentStatus | null
   secretCodeHash: string | null
@@ -221,7 +221,7 @@ export type IncidentGroupByOutputType = {
   description: string | null
   location: string | null
   involvedPeople: string | null
-  incidentDate: Date | null
+  incidentDate: string | null
   reporterType: $Enums.ReporterType
   status: $Enums.IncidentStatus
   secretCodeHash: string
@@ -261,7 +261,7 @@ export type IncidentWhereInput = {
   description?: Prisma.StringNullableFilter<"Incident"> | string | null
   location?: Prisma.StringNullableFilter<"Incident"> | string | null
   involvedPeople?: Prisma.StringNullableFilter<"Incident"> | string | null
-  incidentDate?: Prisma.DateTimeNullableFilter<"Incident"> | Date | string | null
+  incidentDate?: Prisma.StringNullableFilter<"Incident"> | string | null
   reporterType?: Prisma.EnumReporterTypeFilter<"Incident"> | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFilter<"Incident"> | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFilter<"Incident"> | string
@@ -275,7 +275,7 @@ export type IncidentWhereInput = {
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   messages?: Prisma.MessageListRelationFilter
   reporter?: Prisma.XOR<Prisma.ReporterNullableScalarRelationFilter, Prisma.ReporterWhereInput> | null
-  secretCodes?: Prisma.SecretCodeListRelationFilter
+  secretCode?: Prisma.SecretCodeListRelationFilter
 }
 
 export type IncidentOrderByWithRelationInput = {
@@ -300,7 +300,7 @@ export type IncidentOrderByWithRelationInput = {
   company?: Prisma.CompanyOrderByWithRelationInput
   messages?: Prisma.MessageOrderByRelationAggregateInput
   reporter?: Prisma.ReporterOrderByWithRelationInput
-  secretCodes?: Prisma.SecretCodeOrderByRelationAggregateInput
+  secretCode?: Prisma.SecretCodeOrderByRelationAggregateInput
 }
 
 export type IncidentWhereUniqueInput = Prisma.AtLeast<{
@@ -314,7 +314,7 @@ export type IncidentWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Incident"> | string | null
   location?: Prisma.StringNullableFilter<"Incident"> | string | null
   involvedPeople?: Prisma.StringNullableFilter<"Incident"> | string | null
-  incidentDate?: Prisma.DateTimeNullableFilter<"Incident"> | Date | string | null
+  incidentDate?: Prisma.StringNullableFilter<"Incident"> | string | null
   reporterType?: Prisma.EnumReporterTypeFilter<"Incident"> | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFilter<"Incident"> | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFilter<"Incident"> | string
@@ -328,7 +328,7 @@ export type IncidentWhereUniqueInput = Prisma.AtLeast<{
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   messages?: Prisma.MessageListRelationFilter
   reporter?: Prisma.XOR<Prisma.ReporterNullableScalarRelationFilter, Prisma.ReporterWhereInput> | null
-  secretCodes?: Prisma.SecretCodeListRelationFilter
+  secretCode?: Prisma.SecretCodeListRelationFilter
 }, "id" | "incidentIdDisplay">
 
 export type IncidentOrderByWithAggregationInput = {
@@ -364,7 +364,7 @@ export type IncidentScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Incident"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Incident"> | string | null
   involvedPeople?: Prisma.StringNullableWithAggregatesFilter<"Incident"> | string | null
-  incidentDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Incident"> | Date | string | null
+  incidentDate?: Prisma.StringNullableWithAggregatesFilter<"Incident"> | string | null
   reporterType?: Prisma.EnumReporterTypeWithAggregatesFilter<"Incident"> | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusWithAggregatesFilter<"Incident"> | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringWithAggregatesFilter<"Incident"> | string
@@ -382,7 +382,7 @@ export type IncidentCreateInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -396,7 +396,7 @@ export type IncidentCreateInput = {
   company: Prisma.CompanyCreateNestedOneWithoutIncidentsInput
   messages?: Prisma.MessageCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUncheckedCreateInput = {
@@ -407,7 +407,7 @@ export type IncidentUncheckedCreateInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -420,7 +420,7 @@ export type IncidentUncheckedCreateInput = {
   handlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutIncidentInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterUncheckedCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUpdateInput = {
@@ -430,7 +430,7 @@ export type IncidentUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -444,7 +444,7 @@ export type IncidentUpdateInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutIncidentsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateInput = {
@@ -455,7 +455,7 @@ export type IncidentUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -468,7 +468,7 @@ export type IncidentUncheckedUpdateInput = {
   handlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutIncidentNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUncheckedUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentCreateManyInput = {
@@ -479,7 +479,7 @@ export type IncidentCreateManyInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -497,7 +497,7 @@ export type IncidentUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -516,7 +516,7 @@ export type IncidentUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -641,10 +641,6 @@ export type IncidentUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.IncidentScalarWhereInput | Prisma.IncidentScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type EnumReporterTypeFieldUpdateOperationsInput = {
   set?: $Enums.ReporterType
 }
@@ -653,18 +649,22 @@ export type EnumIncidentStatusFieldUpdateOperationsInput = {
   set?: $Enums.IncidentStatus
 }
 
-export type IncidentCreateNestedOneWithoutSecretCodesInput = {
-  create?: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodesInput, Prisma.IncidentUncheckedCreateWithoutSecretCodesInput>
-  connectOrCreate?: Prisma.IncidentCreateOrConnectWithoutSecretCodesInput
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type IncidentCreateNestedOneWithoutSecretCodeInput = {
+  create?: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodeInput, Prisma.IncidentUncheckedCreateWithoutSecretCodeInput>
+  connectOrCreate?: Prisma.IncidentCreateOrConnectWithoutSecretCodeInput
   connect?: Prisma.IncidentWhereUniqueInput
 }
 
-export type IncidentUpdateOneRequiredWithoutSecretCodesNestedInput = {
-  create?: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodesInput, Prisma.IncidentUncheckedCreateWithoutSecretCodesInput>
-  connectOrCreate?: Prisma.IncidentCreateOrConnectWithoutSecretCodesInput
-  upsert?: Prisma.IncidentUpsertWithoutSecretCodesInput
+export type IncidentUpdateOneRequiredWithoutSecretCodeNestedInput = {
+  create?: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodeInput, Prisma.IncidentUncheckedCreateWithoutSecretCodeInput>
+  connectOrCreate?: Prisma.IncidentCreateOrConnectWithoutSecretCodeInput
+  upsert?: Prisma.IncidentUpsertWithoutSecretCodeInput
   connect?: Prisma.IncidentWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.IncidentUpdateToOneWithWhereWithoutSecretCodesInput, Prisma.IncidentUpdateWithoutSecretCodesInput>, Prisma.IncidentUncheckedUpdateWithoutSecretCodesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.IncidentUpdateToOneWithWhereWithoutSecretCodeInput, Prisma.IncidentUpdateWithoutSecretCodeInput>, Prisma.IncidentUncheckedUpdateWithoutSecretCodeInput>
 }
 
 export type IncidentCreateNestedOneWithoutMessagesInput = {
@@ -730,7 +730,7 @@ export type IncidentCreateWithoutCompanyInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -743,7 +743,7 @@ export type IncidentCreateWithoutCompanyInput = {
   handlers?: Prisma.IncidentHandlerCreateNestedManyWithoutIncidentInput
   messages?: Prisma.MessageCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUncheckedCreateWithoutCompanyInput = {
@@ -753,7 +753,7 @@ export type IncidentUncheckedCreateWithoutCompanyInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -766,7 +766,7 @@ export type IncidentUncheckedCreateWithoutCompanyInput = {
   handlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutIncidentInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterUncheckedCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentCreateOrConnectWithoutCompanyInput = {
@@ -806,7 +806,7 @@ export type IncidentScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Incident"> | string | null
   location?: Prisma.StringNullableFilter<"Incident"> | string | null
   involvedPeople?: Prisma.StringNullableFilter<"Incident"> | string | null
-  incidentDate?: Prisma.DateTimeNullableFilter<"Incident"> | Date | string | null
+  incidentDate?: Prisma.StringNullableFilter<"Incident"> | string | null
   reporterType?: Prisma.EnumReporterTypeFilter<"Incident"> | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFilter<"Incident"> | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFilter<"Incident"> | string
@@ -817,14 +817,14 @@ export type IncidentScalarWhereInput = {
   duration?: Prisma.StringNullableFilter<"Incident"> | string | null
 }
 
-export type IncidentCreateWithoutSecretCodesInput = {
+export type IncidentCreateWithoutSecretCodeInput = {
   id?: string
   incidentIdDisplay: string
   category?: string | null
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -840,7 +840,7 @@ export type IncidentCreateWithoutSecretCodesInput = {
   reporter?: Prisma.ReporterCreateNestedOneWithoutIncidentInput
 }
 
-export type IncidentUncheckedCreateWithoutSecretCodesInput = {
+export type IncidentUncheckedCreateWithoutSecretCodeInput = {
   id?: string
   companyId: string
   incidentIdDisplay: string
@@ -848,7 +848,7 @@ export type IncidentUncheckedCreateWithoutSecretCodesInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -863,30 +863,30 @@ export type IncidentUncheckedCreateWithoutSecretCodesInput = {
   reporter?: Prisma.ReporterUncheckedCreateNestedOneWithoutIncidentInput
 }
 
-export type IncidentCreateOrConnectWithoutSecretCodesInput = {
+export type IncidentCreateOrConnectWithoutSecretCodeInput = {
   where: Prisma.IncidentWhereUniqueInput
-  create: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodesInput, Prisma.IncidentUncheckedCreateWithoutSecretCodesInput>
+  create: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodeInput, Prisma.IncidentUncheckedCreateWithoutSecretCodeInput>
 }
 
-export type IncidentUpsertWithoutSecretCodesInput = {
-  update: Prisma.XOR<Prisma.IncidentUpdateWithoutSecretCodesInput, Prisma.IncidentUncheckedUpdateWithoutSecretCodesInput>
-  create: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodesInput, Prisma.IncidentUncheckedCreateWithoutSecretCodesInput>
+export type IncidentUpsertWithoutSecretCodeInput = {
+  update: Prisma.XOR<Prisma.IncidentUpdateWithoutSecretCodeInput, Prisma.IncidentUncheckedUpdateWithoutSecretCodeInput>
+  create: Prisma.XOR<Prisma.IncidentCreateWithoutSecretCodeInput, Prisma.IncidentUncheckedCreateWithoutSecretCodeInput>
   where?: Prisma.IncidentWhereInput
 }
 
-export type IncidentUpdateToOneWithWhereWithoutSecretCodesInput = {
+export type IncidentUpdateToOneWithWhereWithoutSecretCodeInput = {
   where?: Prisma.IncidentWhereInput
-  data: Prisma.XOR<Prisma.IncidentUpdateWithoutSecretCodesInput, Prisma.IncidentUncheckedUpdateWithoutSecretCodesInput>
+  data: Prisma.XOR<Prisma.IncidentUpdateWithoutSecretCodeInput, Prisma.IncidentUncheckedUpdateWithoutSecretCodeInput>
 }
 
-export type IncidentUpdateWithoutSecretCodesInput = {
+export type IncidentUpdateWithoutSecretCodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   incidentIdDisplay?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -902,7 +902,7 @@ export type IncidentUpdateWithoutSecretCodesInput = {
   reporter?: Prisma.ReporterUpdateOneWithoutIncidentNestedInput
 }
 
-export type IncidentUncheckedUpdateWithoutSecretCodesInput = {
+export type IncidentUncheckedUpdateWithoutSecretCodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   incidentIdDisplay?: Prisma.StringFieldUpdateOperationsInput | string
@@ -910,7 +910,7 @@ export type IncidentUncheckedUpdateWithoutSecretCodesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -932,7 +932,7 @@ export type IncidentCreateWithoutMessagesInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -945,7 +945,7 @@ export type IncidentCreateWithoutMessagesInput = {
   handlers?: Prisma.IncidentHandlerCreateNestedManyWithoutIncidentInput
   company: Prisma.CompanyCreateNestedOneWithoutIncidentsInput
   reporter?: Prisma.ReporterCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUncheckedCreateWithoutMessagesInput = {
@@ -956,7 +956,7 @@ export type IncidentUncheckedCreateWithoutMessagesInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -968,7 +968,7 @@ export type IncidentUncheckedCreateWithoutMessagesInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutIncidentInput
   handlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterUncheckedCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentCreateOrConnectWithoutMessagesInput = {
@@ -994,7 +994,7 @@ export type IncidentUpdateWithoutMessagesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1007,7 +1007,7 @@ export type IncidentUpdateWithoutMessagesInput = {
   handlers?: Prisma.IncidentHandlerUpdateManyWithoutIncidentNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutIncidentsNestedInput
   reporter?: Prisma.ReporterUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateWithoutMessagesInput = {
@@ -1018,7 +1018,7 @@ export type IncidentUncheckedUpdateWithoutMessagesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1030,7 +1030,7 @@ export type IncidentUncheckedUpdateWithoutMessagesInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutIncidentNestedInput
   handlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUncheckedUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentCreateWithoutReporterInput = {
@@ -1040,7 +1040,7 @@ export type IncidentCreateWithoutReporterInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1053,7 +1053,7 @@ export type IncidentCreateWithoutReporterInput = {
   handlers?: Prisma.IncidentHandlerCreateNestedManyWithoutIncidentInput
   company: Prisma.CompanyCreateNestedOneWithoutIncidentsInput
   messages?: Prisma.MessageCreateNestedManyWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUncheckedCreateWithoutReporterInput = {
@@ -1064,7 +1064,7 @@ export type IncidentUncheckedCreateWithoutReporterInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1076,7 +1076,7 @@ export type IncidentUncheckedCreateWithoutReporterInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutIncidentInput
   handlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutIncidentInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentCreateOrConnectWithoutReporterInput = {
@@ -1102,7 +1102,7 @@ export type IncidentUpdateWithoutReporterInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1115,7 +1115,7 @@ export type IncidentUpdateWithoutReporterInput = {
   handlers?: Prisma.IncidentHandlerUpdateManyWithoutIncidentNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutIncidentsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateWithoutReporterInput = {
@@ -1126,7 +1126,7 @@ export type IncidentUncheckedUpdateWithoutReporterInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1138,7 +1138,7 @@ export type IncidentUncheckedUpdateWithoutReporterInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutIncidentNestedInput
   handlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutIncidentNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentCreateWithoutHandlersInput = {
@@ -1148,7 +1148,7 @@ export type IncidentCreateWithoutHandlersInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1161,7 +1161,7 @@ export type IncidentCreateWithoutHandlersInput = {
   company: Prisma.CompanyCreateNestedOneWithoutIncidentsInput
   messages?: Prisma.MessageCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUncheckedCreateWithoutHandlersInput = {
@@ -1172,7 +1172,7 @@ export type IncidentUncheckedCreateWithoutHandlersInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1184,7 +1184,7 @@ export type IncidentUncheckedCreateWithoutHandlersInput = {
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutIncidentInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterUncheckedCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentCreateOrConnectWithoutHandlersInput = {
@@ -1210,7 +1210,7 @@ export type IncidentUpdateWithoutHandlersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1223,7 +1223,7 @@ export type IncidentUpdateWithoutHandlersInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutIncidentsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateWithoutHandlersInput = {
@@ -1234,7 +1234,7 @@ export type IncidentUncheckedUpdateWithoutHandlersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1246,7 +1246,7 @@ export type IncidentUncheckedUpdateWithoutHandlersInput = {
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutIncidentNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUncheckedUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentCreateWithoutAttachmentsInput = {
@@ -1256,7 +1256,7 @@ export type IncidentCreateWithoutAttachmentsInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1269,7 +1269,7 @@ export type IncidentCreateWithoutAttachmentsInput = {
   company: Prisma.CompanyCreateNestedOneWithoutIncidentsInput
   messages?: Prisma.MessageCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentUncheckedCreateWithoutAttachmentsInput = {
@@ -1280,7 +1280,7 @@ export type IncidentUncheckedCreateWithoutAttachmentsInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1292,7 +1292,7 @@ export type IncidentUncheckedCreateWithoutAttachmentsInput = {
   handlers?: Prisma.IncidentHandlerUncheckedCreateNestedManyWithoutIncidentInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutIncidentInput
   reporter?: Prisma.ReporterUncheckedCreateNestedOneWithoutIncidentInput
-  secretCodes?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
+  secretCode?: Prisma.SecretCodeUncheckedCreateNestedManyWithoutIncidentInput
 }
 
 export type IncidentCreateOrConnectWithoutAttachmentsInput = {
@@ -1318,7 +1318,7 @@ export type IncidentUpdateWithoutAttachmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1331,7 +1331,7 @@ export type IncidentUpdateWithoutAttachmentsInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutIncidentsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateWithoutAttachmentsInput = {
@@ -1342,7 +1342,7 @@ export type IncidentUncheckedUpdateWithoutAttachmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1354,7 +1354,7 @@ export type IncidentUncheckedUpdateWithoutAttachmentsInput = {
   handlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutIncidentNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUncheckedUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentCreateManyCompanyInput = {
@@ -1364,7 +1364,7 @@ export type IncidentCreateManyCompanyInput = {
   description?: string | null
   location?: string | null
   involvedPeople?: string | null
-  incidentDate?: Date | string | null
+  incidentDate?: string | null
   reporterType?: $Enums.ReporterType
   status?: $Enums.IncidentStatus
   secretCodeHash: string
@@ -1382,7 +1382,7 @@ export type IncidentUpdateWithoutCompanyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1395,7 +1395,7 @@ export type IncidentUpdateWithoutCompanyInput = {
   handlers?: Prisma.IncidentHandlerUpdateManyWithoutIncidentNestedInput
   messages?: Prisma.MessageUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateWithoutCompanyInput = {
@@ -1405,7 +1405,7 @@ export type IncidentUncheckedUpdateWithoutCompanyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1418,7 +1418,7 @@ export type IncidentUncheckedUpdateWithoutCompanyInput = {
   handlers?: Prisma.IncidentHandlerUncheckedUpdateManyWithoutIncidentNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutIncidentNestedInput
   reporter?: Prisma.ReporterUncheckedUpdateOneWithoutIncidentNestedInput
-  secretCodes?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
+  secretCode?: Prisma.SecretCodeUncheckedUpdateManyWithoutIncidentNestedInput
 }
 
 export type IncidentUncheckedUpdateManyWithoutCompanyInput = {
@@ -1428,7 +1428,7 @@ export type IncidentUncheckedUpdateManyWithoutCompanyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   involvedPeople?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  incidentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  incidentDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reporterType?: Prisma.EnumReporterTypeFieldUpdateOperationsInput | $Enums.ReporterType
   status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   secretCodeHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1448,14 +1448,14 @@ export type IncidentCountOutputType = {
   attachments: number
   handlers: number
   messages: number
-  secretCodes: number
+  secretCode: number
 }
 
 export type IncidentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attachments?: boolean | IncidentCountOutputTypeCountAttachmentsArgs
   handlers?: boolean | IncidentCountOutputTypeCountHandlersArgs
   messages?: boolean | IncidentCountOutputTypeCountMessagesArgs
-  secretCodes?: boolean | IncidentCountOutputTypeCountSecretCodesArgs
+  secretCode?: boolean | IncidentCountOutputTypeCountSecretCodeArgs
 }
 
 /**
@@ -1492,7 +1492,7 @@ export type IncidentCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Typ
 /**
  * IncidentCountOutputType without action
  */
-export type IncidentCountOutputTypeCountSecretCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type IncidentCountOutputTypeCountSecretCodeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SecretCodeWhereInput
 }
 
@@ -1519,7 +1519,7 @@ export type IncidentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.Incident$messagesArgs<ExtArgs>
   reporter?: boolean | Prisma.Incident$reporterArgs<ExtArgs>
-  secretCodes?: boolean | Prisma.Incident$secretCodesArgs<ExtArgs>
+  secretCode?: boolean | Prisma.Incident$secretCodeArgs<ExtArgs>
   _count?: boolean | Prisma.IncidentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["incident"]>
 
@@ -1589,7 +1589,7 @@ export type IncidentInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.Incident$messagesArgs<ExtArgs>
   reporter?: boolean | Prisma.Incident$reporterArgs<ExtArgs>
-  secretCodes?: boolean | Prisma.Incident$secretCodesArgs<ExtArgs>
+  secretCode?: boolean | Prisma.Incident$secretCodeArgs<ExtArgs>
   _count?: boolean | Prisma.IncidentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type IncidentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1607,7 +1607,7 @@ export type $IncidentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     company: Prisma.$CompanyPayload<ExtArgs>
     messages: Prisma.$MessagePayload<ExtArgs>[]
     reporter: Prisma.$ReporterPayload<ExtArgs> | null
-    secretCodes: Prisma.$SecretCodePayload<ExtArgs>[]
+    secretCode: Prisma.$SecretCodePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1617,7 +1617,7 @@ export type $IncidentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     description: string | null
     location: string | null
     involvedPeople: string | null
-    incidentDate: Date | null
+    incidentDate: string | null
     reporterType: $Enums.ReporterType
     status: $Enums.IncidentStatus
     secretCodeHash: string
@@ -2025,7 +2025,7 @@ export interface Prisma__IncidentClient<T, Null = never, ExtArgs extends runtime
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   messages<T extends Prisma.Incident$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Incident$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reporter<T extends Prisma.Incident$reporterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Incident$reporterArgs<ExtArgs>>): Prisma.Prisma__ReporterClient<runtime.Types.Result.GetResult<Prisma.$ReporterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  secretCodes<T extends Prisma.Incident$secretCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Incident$secretCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecretCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  secretCode<T extends Prisma.Incident$secretCodeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Incident$secretCodeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecretCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2062,7 +2062,7 @@ export interface IncidentFieldRefs {
   readonly description: Prisma.FieldRef<"Incident", 'String'>
   readonly location: Prisma.FieldRef<"Incident", 'String'>
   readonly involvedPeople: Prisma.FieldRef<"Incident", 'String'>
-  readonly incidentDate: Prisma.FieldRef<"Incident", 'DateTime'>
+  readonly incidentDate: Prisma.FieldRef<"Incident", 'String'>
   readonly reporterType: Prisma.FieldRef<"Incident", 'ReporterType'>
   readonly status: Prisma.FieldRef<"Incident", 'IncidentStatus'>
   readonly secretCodeHash: Prisma.FieldRef<"Incident", 'String'>
@@ -2563,9 +2563,9 @@ export type Incident$reporterArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Incident.secretCodes
+ * Incident.secretCode
  */
-export type Incident$secretCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Incident$secretCodeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the SecretCode
    */

@@ -1491,6 +1491,7 @@ export const AttachmentScalarFieldEnum = {
   uploadedBy: 'uploadedBy',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
+  mimeType: 'mimeType',
   createdAt: 'createdAt'
 } as const
 
