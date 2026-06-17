@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CompanyNotFoundException } from '../companies/exceptions/company-not-found.exception';
 import { IncidentNotFoundException } from '../incidents/exceptions/incident-not-found.exception';
@@ -7,6 +7,8 @@ import { HandlerNotFoundException } from './exceptions/handler-not-found.excepti
 
 @Injectable()
 export class HandlersService {
+
+    private readonly logger = new Logger(HandlersService.name)
     constructor(
         private readonly prisma: PrismaService,
         private readonly auditLog: AuditLogService
@@ -15,7 +17,8 @@ export class HandlersService {
     // get handler details
     async getHandlerDetails(handlerId: string) {
         try {
-            return await this.prisma.incidentHandler.findUnique({ where: { id: handlerId } });
+
+            return await this.prisma.user.findUnique({ where: { id: handlerId } });
         } catch (error) {
             throw new Error(String(error))
         }
@@ -24,19 +27,24 @@ export class HandlersService {
     // get a handler's incidents
     async getHandlerIncidents(handlerId: string) {
         try {
-            const handler = await this.prisma.incidentHandler.findUnique({ where: { id: handlerId } });
+            const handler = await this.prisma.user.findUnique({ where: { id: handlerId } });
 
             if (!handler) throw new HandlerNotFoundException(handlerId);
 
-            const handlerIncidents = await this.prisma.incidentHandler.findMany({
+            return await this.prisma.user.findUnique({
                 where: {
                     id: handlerId,
                 },
                 select: {
-                    incident: true
+                    incidentHandlers: {
+                        select: {
+                            incident: true
+                        }
+                    }
                 }
 
             })
+
         } catch (error) {
             throw new Error(String(error));
         }
@@ -49,12 +57,16 @@ export class HandlersService {
 
             if (!incident) throw new IncidentNotFoundException(incidentId);
 
-            return await this.prisma.incidentHandler.update({
+            return await this.prisma.user.update({
                 where: {
                     id: handlerId,
                 },
                 data: {
-                    incidentId
+                    incidentHandlers: {
+                        create: {
+                            incidentId
+                        }
+                    }
                 }
             });
 
