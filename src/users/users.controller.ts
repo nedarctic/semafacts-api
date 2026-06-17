@@ -13,13 +13,6 @@ import { PaginationDto } from '../common/pagination.dto';
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Post()
-    createUser(@Body() body: CreateUserDto) {
-        return this.usersService.createUser(body);
-    }
-
     // get users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
@@ -28,6 +21,7 @@ export class UsersController {
         return this.usersService.getUsers(pagination);
     }
 
+    // get user by id
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':id')
@@ -35,13 +29,15 @@ export class UsersController {
         return this.usersService.getUserById(id);
     }
 
+    // create user
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id')
-    getUser(@Param('id', new ParseUUIDPipe()) id: string) {
-        return this.usersService.getUserById(id);
+    @Post()
+    createUser(@Body() body: CreateUserDto) {
+        return this.usersService.createUser(body);
     }
 
+    // update user
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Patch(':id')
@@ -49,6 +45,7 @@ export class UsersController {
         return this.usersService.updateUser(id, body);
     }
 
+    // delete user
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Delete(':id')
