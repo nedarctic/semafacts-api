@@ -30,7 +30,6 @@ export class IncidentsController {
         return await this.incidentsService.getCompanyIncidentHandlers(incidentId)
     }
 
-
     // create new incident
     @Post(':companyId')
     @UseInterceptors(FilesInterceptor('attachments'))

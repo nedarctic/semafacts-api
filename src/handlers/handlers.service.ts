@@ -12,6 +12,15 @@ export class HandlersService {
         private readonly auditLog: AuditLogService
     ) { }
 
+    // get handler details
+    async getHandlerDetails(handlerId: string) {
+        try {
+            return await this.prisma.incidentHandler.findUnique({ where: { id: handlerId } });
+        } catch (error) {
+            throw new Error(String(error))
+        }
+    }
+
     // get a handler's incidents
     async getHandlerIncidents(handlerId: string) {
         try {
@@ -22,11 +31,11 @@ export class HandlersService {
             const handlerIncidents = await this.prisma.incidentHandler.findMany({
                 where: {
                     id: handlerId,
-                }, 
+                },
                 select: {
                     incident: true
                 }
-                
+
             })
         } catch (error) {
             throw new Error(String(error));
@@ -40,9 +49,9 @@ export class HandlersService {
 
             if (!incident) throw new IncidentNotFoundException(incidentId);
 
-            await this.prisma.incidentHandler.update({
+            return await this.prisma.incidentHandler.update({
                 where: {
-                    id: handlerId
+                    id: handlerId,
                 },
                 data: {
                     incidentId
@@ -54,6 +63,6 @@ export class HandlersService {
         }
     }
 
-    
+
 
 }
