@@ -1,6 +1,8 @@
-import { Transform } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { AttachmentUploader, IncidentStatus, ReporterType } from "../../generated/prisma/enums";
+
+export const EmptyToUndefined = Transform(({value}) => value === "" ? undefined : value);
 
 export class UpdateIncidentDto {
 
@@ -20,10 +22,8 @@ export class UpdateIncidentDto {
     @IsOptional()
     involvedPeople?: string;
 
-    @IsString()
     @IsOptional()
-    @Transform(({ value }) => (new Date(value)))
-    @IsDate()
+    @IsString()
     incidentDate?: string;
 
     @IsNotEmpty()
@@ -34,13 +34,15 @@ export class UpdateIncidentDto {
     @IsOptional()
     @IsString()
     status?: IncidentStatus;
-
-    @IsString()
+    
     @IsOptional()
+    @Type(() => Date)
+    @IsDate()
     deadlineAt?: string;
 
-    @IsString()
     @IsOptional()
+    @Type(() => Date)
+    @IsDate()
     closedAt?: string;
 
     @IsString()
@@ -49,6 +51,6 @@ export class UpdateIncidentDto {
 
     @IsString()
     @IsOptional()
-    uploadedBy!: AttachmentUploader;
+    uploadedBy?: AttachmentUploader;
 
 }

@@ -176,6 +176,7 @@ enum UserStatus {
 enum AttachmentUploader {
   Reporter
   Handler
+  SuperAdmin
 }
 
 enum SenderType {

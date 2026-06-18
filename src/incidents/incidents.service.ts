@@ -9,6 +9,7 @@ import { CreateIncidentDto } from './dto/create-incident.dto';
 import { UpdateIncidentDto } from './dto/update-incident.dto';
 import { IncidentNotFoundException } from './exceptions/incident-not-found.exception';
 import { CompanyNotFoundException } from '../companies/exceptions/company-not-found.exception';
+import { AttachmentUploader } from '../generated/prisma/enums';
 
 @Injectable()
 export class IncidentsService {
@@ -140,8 +141,6 @@ export class IncidentsService {
             }
         });
 
-        this.logger.log(`INCIDENT DATA ${incident}`)
-
         if (!incident) {
             throw new IncidentNotFoundException(incidentId);
         }
@@ -214,7 +213,7 @@ export class IncidentsService {
     }
 
     // update an incident
-    async updateIncident(incidentId: string, attachments: Express.Multer.File[], dto: UpdateIncidentDto) {
+    async updateIncident(incidentId: string, dto: UpdateIncidentDto, attachments?: Express.Multer.File[], uploadedBy?: AttachmentUploader) {
         const incident = await this.prisma.incident.findUnique({ where: { id: incidentId } });
 
         if (!incident) {
@@ -243,11 +242,13 @@ export class IncidentsService {
                             incidentId,
                             fileKey: key,
                             fileUrl: publicUrl,
-                            uploadedBy: dto.uploadedBy,
+                            uploadedBy: uploadedBy!,
+                            mimeType: attachment.mimetype,
                         }
                     });
                 }
             }
+
             // log update
             await this.auditLog.createAuditLog('Incident updated', `Incident ID ${updatedIncident.incidentIdDisplay} just got updated`, updatedIncident.companyId)
 

@@ -29,7 +29,8 @@ export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 export const AttachmentUploader = {
   Reporter: 'Reporter',
-  Handler: 'Handler'
+  Handler: 'Handler',
+  SuperAdmin: 'SuperAdmin'
 } as const
 
 export type AttachmentUploader = (typeof AttachmentUploader)[keyof typeof AttachmentUploader]

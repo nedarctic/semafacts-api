@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Query, UploadedFiles, UseInterceptors, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Query, UploadedFiles, UseInterceptors, Patch, Delete, Logger } from '@nestjs/common';
 import { IncidentsService } from './incidents.service';
 import { PaginationDto } from '../common/pagination.dto';
 import { UpdateIncidentDto } from './dto/update-incident.dto';
@@ -8,6 +8,7 @@ import { CreateIncidentDto } from './dto/create-incident.dto';
 
 @Controller('incidents')
 export class IncidentsController {
+    private readonly logger = new Logger(IncidentsController.name)
     constructor(private readonly incidentsService: IncidentsService) { }
 
     // get paginated incidents
@@ -47,9 +48,10 @@ export class IncidentsController {
     async updateIncident(
         @Param('incidentId') incidentId: string,
         @Body() dto: UpdateIncidentDto,
-        @UploadedFiles(new AttachmentsValidationPipe()) attachments: Express.Multer.File[]
+        @UploadedFiles(new AttachmentsValidationPipe()) attachments?: Express.Multer.File[]
     ) {
-        return await this.incidentsService.updateIncident(incidentId, attachments, dto);
+        const {uploadedBy, ...incidentDto} = dto;
+        return await this.incidentsService.updateIncident(incidentId, incidentDto, attachments, uploadedBy);
     }
 
     // delete an incident
