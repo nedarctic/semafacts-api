@@ -9,7 +9,7 @@ import { ReportingPageDto } from './dto/reporting-page.dto';
 import { CategoryNotFoundException } from './exceptions/category-not-found.exception';
 import { CompanyNotFoundException } from './exceptions/company-not-found.exception';
 import { UsersNotFoundException } from './exceptions/users-not-found.exception';
-import { UserRole } from '../generated/prisma/enums';
+import { UserRole, UserStatus } from '../generated/prisma/enums';
 
 @Injectable()
 export class CompaniesService {
@@ -124,6 +124,126 @@ export class CompaniesService {
                 _count: {
                     select: {
                         users: true
+                    }
+                }
+            }
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        return company._count.users;
+    }
+
+    // get the total admins of a company
+    async getTotalCompanyAdmins (companyId: string) {
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId },
+            select: {
+                _count: {
+                    select: {
+                        users: {
+                            where: {
+                                role: UserRole.ADMIN
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        return company._count.users;
+    }
+
+    // get the total handlers of a company
+    async getTotalCompanyHandlers (companyId: string) {
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId },
+            select: {
+                _count: {
+                    select: {
+                        users: {
+                            where: {
+                                role: UserRole.HANDLER
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        return company._count.users;
+    }
+
+    // get the total invited users of a company
+    async getTotalCompanyInvitedUsers (companyId: string) {
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId },
+            select: {
+                _count: {
+                    select: {
+                        users: {
+                            where: {
+                                status: UserStatus.INVITED
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        return company._count.users;
+    }
+
+    // get the total inactive users of a company
+    async getTotalCompanyInactiveUsers (companyId: string) {
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId },
+            select: {
+                _count: {
+                    select: {
+                        users: {
+                            where: {
+                                status: UserStatus.INACTIVE
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        return company._count.users;
+    }
+
+    // get the total active users of a company
+    async getTotalCompanyActiveUsers (companyId: string) {
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId },
+            select: {
+                _count: {
+                    select: {
+                        users: {
+                            where: {
+                                status: UserStatus.ACTIVE
+                            }
+                        }
                     }
                 }
             }

@@ -60,7 +60,47 @@ export class CompaniesController {
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':id/total-users')
     async getTotalCompanyUsers(@Param('id') id: string) {
-        return this.companiesService.getTotalCompanyUsers(id);
+        return await this.companiesService.getTotalCompanyUsers(id);
+    }
+
+    // get company total admins
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-admins')
+    async getTotalCompanyAdmins(@Param('id') id: string) {
+        return await this.companiesService.getTotalCompanyAdmins(id);
+    }
+
+    // get company total handlers
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-handlers')
+    async getTotalCompanyHandlers(@Param('id') id: string) {
+        return await this.companiesService.getTotalCompanyHandlers(id);
+    }
+
+    // get company total invited users
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-invited-users')
+    async getTotalCompanyInvitedUsers (@Param('id') id: string) {
+        return await this.companiesService.getTotalCompanyInvitedUsers(id);
+    }
+
+    // get company total active users
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-active-users')
+    async getTotalCompanyActiveUsers (@Param('id') id: string) {
+        return await this.companiesService.getTotalCompanyActiveUsers(id);
+    }
+
+    // get company total inactive users
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':id/total-inactive-users')
+    async getTotalCompanyInactiveUsers (@Param('id') id: string) {
+        return await this.companiesService.getTotalCompanyInactiveUsers(id);
     }
 
     // get company total incidents
