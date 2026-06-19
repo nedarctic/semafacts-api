@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PaginationDto } from '../common/pagination.dto';
-import { CompanyWhereInput } from '../generated/prisma/models';
+import { CompanyWhereInput, UserWhereInput } from '../generated/prisma/models';
 import { PrismaService } from '../prisma/prisma.service';
 import { R2Service } from '../r2/r2.service';
 import { AddUsersDto } from './dto/add-users.dto';
@@ -137,7 +137,7 @@ export class CompaniesService {
     }
 
     // get the total admins of a company
-    async getTotalCompanyAdmins (companyId: string) {
+    async getTotalCompanyAdmins(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
             select: {
@@ -161,7 +161,7 @@ export class CompaniesService {
     }
 
     // get the total handlers of a company
-    async getTotalCompanyHandlers (companyId: string) {
+    async getTotalCompanyHandlers(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
             select: {
@@ -185,7 +185,7 @@ export class CompaniesService {
     }
 
     // get the total invited users of a company
-    async getTotalCompanyInvitedUsers (companyId: string) {
+    async getTotalCompanyInvitedUsers(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
             select: {
@@ -209,7 +209,7 @@ export class CompaniesService {
     }
 
     // get the total inactive users of a company
-    async getTotalCompanyInactiveUsers (companyId: string) {
+    async getTotalCompanyInactiveUsers(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
             select: {
@@ -233,7 +233,7 @@ export class CompaniesService {
     }
 
     // get the total active users of a company
-    async getTotalCompanyActiveUsers (companyId: string) {
+    async getTotalCompanyActiveUsers(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
             select: {
@@ -325,14 +325,23 @@ export class CompaniesService {
         return company.reportingPage;
     }
 
-    // get a company's handlers
-    async getCompanyHandlers(companyId: string) {
+    // get a company's handlers, if incidentId is provided, get handlers for other incidents
+    async getCompanyHandlers(companyId: string, incidentId?: string) {
 
-        this.logger.log(`Company ID received: ${companyId}`)
         try {
             const company = await this.prismaService.company.findUnique({ where: { id: companyId } })
 
             if (!company) throw new CompanyNotFoundException();
+
+            const incidentFilter: UserWhereInput = incidentId ? {
+                NOT: {
+                    incidentHandlers: {
+                        some: {
+                            incidentId
+                        }
+                    }
+                }
+            } : {};
 
             const companyHandlers = await this.prismaService.company.findUnique({
                 where: {
@@ -341,13 +350,15 @@ export class CompaniesService {
                 select: {
                     users: {
                         where: {
-                            role: UserRole.HANDLER
+                            role: UserRole.HANDLER,
+                            ...incidentFilter
                         }
                     }
                 }
             })
 
             return companyHandlers;
+
         } catch (error) {
             throw new Error(String(error));
         }

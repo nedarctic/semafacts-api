@@ -42,9 +42,12 @@ export class CompaniesController {
     }
 
     // get company handlers
-    @Get(':id/handlers')
-    async getCompanyHandlers(@Param('id') id: string) {
-        return await this.companiesService.getCompanyHandlers(id);
+    @Get(':id/handlers/')
+    async getCompanyHandlers(
+        @Param('id') id: string,
+        @Query('incidentId') incidentId?: string
+    ) {
+        return await this.companiesService.getCompanyHandlers(id, incidentId);
     }
 
     // get company incidents
