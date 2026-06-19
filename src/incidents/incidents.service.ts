@@ -115,7 +115,11 @@ export class IncidentsService {
                     id: incidentId
                 },
                 select: {
-                    handlers: true
+                    handlers: {
+                        include: {
+                            handler: true
+                        }
+                    }
                 }
             })
 
