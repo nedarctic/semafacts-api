@@ -52,7 +52,7 @@ export class UsersService {
 
         const skip = (page - 1) * limit;
 
-        const searchUpper = search?.toUpperCase();
+        const searchUpper = search?.trim().toUpperCase();
 
         const roleMatch = Object.values(UserRole)
             .includes(searchUpper as UserRole) ?
@@ -64,44 +64,48 @@ export class UsersService {
             (searchUpper as UserStatus) :
             undefined;
 
-        const where: UserWhereInput = {
-            ...(search && {
+        const where: UserWhereInput = search
+            ? {
                 OR: [
                     {
                         name: {
                             contains: search,
-                            mode: 'insensitive'
-                        }
+                            mode: "insensitive",
+                        },
                     },
                     {
                         email: {
                             contains: search,
-                            mode: 'insensitive'
-                        }
+                            mode: "insensitive",
+                        },
                     },
                     {
                         company: {
                             name: {
                                 contains: search,
-                                mode: 'insensitive'
-                            }
-                        }
-                    }
-                ]
-            }),
+                                mode: "insensitive",
+                            },
+                        },
+                    },
 
-            ...(roleMatch && {
-                role: {
-                    equals: roleMatch
-                }
-            }),
+                    ...(roleMatch
+                        ? [
+                            {
+                                role: roleMatch,
+                            },
+                        ]
+                        : []),
 
-            ...(statusMatch && {
-                status: {
-                    equals: statusMatch
-                }
-            })
-        };
+                    ...(statusMatch
+                        ? [
+                            {
+                                status: statusMatch,
+                            },
+                        ]
+                        : []),
+                ],
+            }
+            : {};
 
         const [usersData, total] = await Promise.all([
             await this.prisma.user.findMany({
