@@ -75,6 +75,50 @@ export class HandlersService {
         }
     }
 
+    // assign handlers to an incident
+    async assignHandlers(incidentId: string, handlersIds: string[]) {
+        try {
+            const incident = await this.prisma.incident.findUnique({
+                where: {
+                    id: incidentId
+                }
+            });
+
+            if (!incident) {
+                throw new IncidentNotFoundException(incidentId);
+            }
+
+            handlersIds.length && await this.prisma.incidentHandler.createMany({
+                data: handlersIds.map(handlerId => ({
+                    incidentId,
+                    handlerId
+                }))
+            })
+        } catch (error) {
+            throw new Error(String(error))
+        }
+    }
+
+    // deassign an incident from a handler
+    async deassignHandler(handlerId: string, incidentId: string) {
+        try {
+            const incident = await this.prisma.incident.findUnique({ where: { id: incidentId } })
+
+            if (!incident) throw new IncidentNotFoundException(incidentId);
+
+            return await this.prisma.incidentHandler.delete({
+                where: {
+                    incidentId_handlerId: {
+                        incidentId,
+                        handlerId,
+                    }
+                }
+            })
+        } catch (error) {
+            throw new Error(String(error))
+        }
+    }
+
 
 
 }
