@@ -18,6 +18,13 @@ export class UsersService {
     async getUserById(id: string) {
         const user = await this.prisma.user.findUnique({
             where: { id },
+            include: {
+                incidentHandlers: {
+                    include: {
+                        incident: true
+                    }
+                }
+            }
         });
 
         if (!user) {
