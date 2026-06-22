@@ -31,19 +31,15 @@ export class HandlersService {
 
             if (!handler) throw new HandlerNotFoundException(handlerId);
 
-            return await this.prisma.user.findUnique({
+            return await this.prisma.incident.findMany({
                 where: {
-                    id: handlerId,
-                },
-                select: {
-                    incidentHandlers: {
-                        select: {
-                            incident: true
+                    handlers: {
+                        some: {
+                            handlerId
                         }
                     }
                 }
-
-            })
+            });
 
         } catch (error) {
             throw new Error(String(error));
