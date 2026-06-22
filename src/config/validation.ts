@@ -11,4 +11,6 @@ export const validationSchema = Joi.object({
     R2_BUCKET_NAME: Joi.string().required(),
     R2_PUBLIC_URL: Joi.string().uri().required(),
     R2_S3_API: Joi.string().uri().required(),
+    UPSTASH_REDIS_REST_URL: Joi.string().required(),
+    UPSTASH_REDIS_REST_TOKEN: Joi.string().required(),
 })
