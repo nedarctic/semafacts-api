@@ -17,6 +17,11 @@ export class InvitesService {
         private readonly usersService: UsersService
     ){}
 
+    private generateToken(): string {
+        return crypto.randomBytes(32).toString('hex');
+    }
+
+    // create invite
     async createInvite(email: string, companyId: string){
         const rawToken = this.generateToken();
         const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
@@ -39,7 +44,7 @@ export class InvitesService {
         });
 
         // send the email with the raw token
-        const inviteLink = `${this.configService.get('FRONTEND_URL')}/invites/verify?token=${rawToken}`;
+        const inviteLink = new URL(`${this.configService.get('FRONTEND_URL')}/invites/verify?token=${rawToken}`);
         const emailContent = `
             <p>You have been invited to join ${company?.name}. Click the link below to accept the invitation:</p>
             <a href="${inviteLink}">Accept Invite</a>
@@ -49,6 +54,7 @@ export class InvitesService {
         await this.emailService.sendEmail(email, `You are invited to join ${company?.name}`, emailContent);
     }
 
+    // verify invite
     async verifyInvite(token: string){
         // hash the incoming token
         const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
@@ -80,9 +86,5 @@ export class InvitesService {
         await this.usersService.updateUser(invite.userId, { status: 'ACTIVE' });
 
         return invite.userId;
-    }
-
-    private generateToken(): string {
-        return crypto.randomBytes(32).toString('hex');
-    }
+    }    
 }
