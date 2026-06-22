@@ -17,7 +17,7 @@ import { LocalStrategy } from './strategy/local.strategy';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt_secret')
+        secret: configService.get<string>('JWT_SECRET')
       })
     })
   ],

@@ -39,7 +39,7 @@ export class InvitesService {
         });
 
         // send the email with the raw token
-        const inviteLink = `${this.configService.get('frontend_url')}/invites/verify?token=${rawToken}`;
+        const inviteLink = `${this.configService.get('FRONTEND_URL')}/invites/verify?token=${rawToken}`;
         const emailContent = `
             <p>You have been invited to join ${company?.name}. Click the link below to accept the invitation:</p>
             <a href="${inviteLink}">Accept Invite</a>

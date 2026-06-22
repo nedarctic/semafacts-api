@@ -10,7 +10,7 @@ export class EmailService {
     constructor(
         private configService: ConfigService
     ) {
-        this.resend = new Resend(this.configService.get('resend_api_key'));
+        this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
     }
 
     /**
