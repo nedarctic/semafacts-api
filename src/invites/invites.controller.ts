@@ -9,6 +9,7 @@ import { UserRole } from '../generated/prisma/enums';
 export class InvitesController {
     constructor(private readonly invitesService: InvitesService){}
 
+    // create invite
     @Post()
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
@@ -17,6 +18,7 @@ export class InvitesController {
         return { message: `Invite sent to ${email}` };
     }
 
+    // verify invite
     @Post('verify')
     async verifyInvite(@Query('token') token: string) {
         const userId = await this.invitesService.verifyInvite(token);
