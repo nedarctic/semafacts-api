@@ -4,10 +4,11 @@ import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
 import { R2Module } from '../r2/r2.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   controllers: [CompaniesController],
   providers: [CompaniesService],
-  imports: [PrismaModule, R2Module, AuditLogModule]
+  imports: [PrismaModule, R2Module, AuditLogModule, EmailModule]
 })
 export class CompaniesModule { }
