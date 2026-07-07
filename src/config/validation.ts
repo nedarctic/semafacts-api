@@ -13,4 +13,9 @@ export const validationSchema = Joi.object({
     R2_S3_API: Joi.string().uri().required(),
     UPSTASH_REDIS_REST_URL: Joi.string().required(),
     UPSTASH_REDIS_REST_TOKEN: Joi.string().required(),
+    SMTP_USERNAME: Joi.string().required(),
+    SMTP_PASSWORD: Joi.string().required(),
+    SMTP_HOST: Joi.string().required(),
+    SMTP_PORT: Joi.number().required(),
+    PORT: Joi.number().required(),
 })
