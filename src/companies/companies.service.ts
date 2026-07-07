@@ -10,6 +10,7 @@ import { CategoryNotFoundException } from './exceptions/category-not-found.excep
 import { CompanyNotFoundException } from './exceptions/company-not-found.exception';
 import { UsersNotFoundException } from './exceptions/users-not-found.exception';
 import { UserRole, UserStatus } from '../generated/prisma/enums';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class CompaniesService {
@@ -18,7 +19,8 @@ export class CompaniesService {
     constructor(
         private readonly auditLog: AuditLogService,
         private readonly prismaService: PrismaService,
-        private readonly r2Service: R2Service
+        private readonly r2Service: R2Service,
+        private readonly mail: EmailService,
     ) { }
 
     // get company by id
@@ -473,6 +475,22 @@ export class CompaniesService {
 
         await this.auditLog.createAuditLog("Reporting page added", `Reporting page for ${res.name} successfully added`, res.id)
         return res;
+    }
+
+    // send an invitation email to a handler
+    async sendInvitationEmail(email: string, companyId: string) {
+        try {
+            const company = await this.prismaService.company.findUnique({ where: { id: companyId } });
+
+            if (!company) {
+                throw new CompanyNotFoundException();
+            }
+
+            const { name } = company;
+            return await this.mail.sendInviteMail(email, name);
+        } catch (error) {
+            throw error;
+        }
     }
 
     // update a company's reporting page
