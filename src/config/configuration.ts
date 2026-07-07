@@ -12,4 +12,9 @@ export default () => ({
     R2_S3_API: process.env.R2_S3_API!,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN!,
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL!,
+    SMTP_USERNAME: process.env.SMTP_USERNAME!,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD!,
+    SMTP_HOST: process.env.SMTP_HOST!,
+    SMTP_PORT: process.env.SMTP_PORT!,
+    PORT: process.env.PORT!,
 })
