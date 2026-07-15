@@ -30,8 +30,8 @@ export class UsersController {
     }
 
     // create user
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    // @UseGuards(RolesGuard)
+    // @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post()
     createUser(@Body() body: CreateUserDto) {
         return this.usersService.createUser(body);
