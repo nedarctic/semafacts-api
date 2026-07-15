@@ -9,7 +9,7 @@ import { CompaniesService } from './companies.service';
 import { AddUsersDto } from './dto/add-users.dto';
 import { ReportingPageDto as CreateReportingPageDto, ReportingPageDto } from './dto/reporting-page.dto';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('companies')
 export class CompaniesController {
 
