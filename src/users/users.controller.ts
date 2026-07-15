@@ -8,7 +8,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../generated/prisma/enums';
 import { PaginationDto } from '../common/pagination.dto';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
@@ -30,8 +30,8 @@ export class UsersController {
     }
 
     // create user
-    // @UseGuards(RolesGuard)
-    // @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post()
     createUser(@Body() body: CreateUserDto) {
         return this.usersService.createUser(body);
