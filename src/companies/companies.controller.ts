@@ -139,8 +139,8 @@ export class CompaniesController {
     }
 
     // create new company
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN)
+    // @UseGuards(RolesGuard)
+    // @Roles(UserRole.SUPER_ADMIN)
     @Post()
     async createCompany(@Body() dto: { name: string }) {
         return await this.companiesService.createCompany(dto.name);
