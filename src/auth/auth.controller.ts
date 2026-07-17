@@ -17,9 +17,9 @@ export class AuthController {
     @Post('login')
     async login(@Request() req: any) {
         const user = req.user;
-        const { access_token, refresh_token } = await this.authService.login(user);
+        const { access_token, refresh_token, company_id } = await this.authService.login(user);
 
-        return { user, access_token, refresh_token };
+        return { user, access_token, refresh_token, company_id };
     }
 
     @Post('refresh')
@@ -27,7 +27,7 @@ export class AuthController {
         if (!dto.refreshToken) {
             throw new UnauthorizedException('No refresh token provided');
         }
-        const { access_token, refresh_token } = await this.authService.refreshToken(dto.refreshToken);
-        return { access_token, refresh_token };
+        const { access_token, refresh_token, company_id } = await this.authService.refreshToken(dto.refreshToken);
+        return { access_token, refresh_token, company_id };
     }
 }

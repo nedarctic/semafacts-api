@@ -41,7 +41,8 @@ export class AuthService {
 
         return {
             access_token,
-            refresh_token
+            refresh_token,
+            company_id: payload.companyId,
         };
     }
 
