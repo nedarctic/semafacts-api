@@ -510,7 +510,7 @@ export class CompaniesService {
             data: {
                 ...dto
             }
-        })
+        });
 
         await this.auditLog.createAuditLog('Reporting page updated', `Reporting page for ${company.name} was successfully updated`, company.id)
         return res;
