@@ -1,7 +1,6 @@
-import { Body, Controller, Post, Request, UnauthorizedException, UseGuards, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
@@ -17,9 +16,9 @@ export class AuthController {
     @Post('login')
     async login(@Request() req: any) {
         const user = req.user;
-        const { access_token, refresh_token, company_id } = await this.authService.login(user);
+        const { access_token, refresh_token } = await this.authService.login(user);
 
-        return { user, access_token, refresh_token, company_id };
+        return { user, access_token, refresh_token };
     }
 
     @Post('refresh')
@@ -27,7 +26,8 @@ export class AuthController {
         if (!dto.refreshToken) {
             throw new UnauthorizedException('No refresh token provided');
         }
-        const { access_token, refresh_token, company_id } = await this.authService.refreshToken(dto.refreshToken);
-        return { access_token, refresh_token, company_id };
+        this.logger.log("refresh token provided:", dto.refreshToken);
+        const { access_token, refresh_token } = await this.authService.refreshToken(dto.refreshToken);
+        return { access_token, refresh_token };
     }
 }
