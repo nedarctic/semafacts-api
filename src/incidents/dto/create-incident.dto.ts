@@ -1,5 +1,4 @@
-import { Transform } from "class-transformer";
-import { IsDate, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { ReporterType } from "../../generated/prisma/enums";
 
 export class CreateIncidentDto {
@@ -26,4 +25,19 @@ export class CreateIncidentDto {
   @IsString()
   reporterType!: ReporterType;
 
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  slaDays?: string;
 }
