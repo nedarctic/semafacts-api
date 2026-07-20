@@ -1,4 +1,15 @@
-import { Controller, Post, Get, Body, Param, Query, UploadedFiles, UseInterceptors, Patch, Delete, Logger } from '@nestjs/common';
+import { Controller, 
+    Post, 
+    Get, 
+    Body, 
+    Param, 
+    Query, 
+    UploadedFiles, 
+    UseInterceptors, 
+    Patch, 
+    Delete, 
+    Logger
+} from '@nestjs/common';
 import { IncidentsService } from './incidents.service';
 import { PaginationDto } from '../common/pagination.dto';
 import { UpdateIncidentDto } from './dto/update-incident.dto';
@@ -21,6 +32,12 @@ export class IncidentsController {
     @Get(':incidentId')
     async getIncident(@Param('incidentId') incidentId: string) {
         return await this.incidentsService.getIncident(incidentId);
+    }
+
+    // get company incidents
+    @Get('company/:companyId')
+    async getCompanyIncidents (@Param("companyId") companyId: string) {
+        return await this.incidentsService.getCompanyIncidents(companyId);
     }
 
     //get incident handlers
