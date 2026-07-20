@@ -53,9 +53,12 @@ export class CompaniesController {
     // get company incidents
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/incidents')
-    async getCompanyIncidents(@Param('id') id: string) {
-        return await this.companiesService.getCompanyIncidents(id);
+    @Get(':companyId/incidents')
+    async getCompanyIncidents(
+        @Param('companyId') companyId: string,
+        @Query() pagination: PaginationDto
+    ) {
+        return await this.companiesService.getCompanyIncidents(companyId, pagination);
     }
 
     // get total company users
