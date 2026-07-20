@@ -13,17 +13,15 @@ export class IncidentAuthController {
     @Post("login")
     async login(@Request() req: any) {
 
-        this.logger.log("Running login...");
-
-        this.logger.log("user", req.user);
         const incident = req.user;
         const {
             accessToken,
             refreshToken,
-            user
+            user,
+            incidentId
         } = await this.incidentAuthService.login(incident);
 
-        return { accessToken, refreshToken, user };
+        return { accessToken, refreshToken, user, incidentId };
     }
 
     @Post("refresh")
@@ -31,8 +29,9 @@ export class IncidentAuthController {
         const {
             accessToken,
             refreshToken,
-            user
+            user,
+            incidentId
         } = await this.incidentAuthService.refresh(dto.refreshToken);
-        return { accessToken, refreshToken, user }
+        return { accessToken, refreshToken, user, incidentId }
     }
 }
