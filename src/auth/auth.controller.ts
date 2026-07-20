@@ -26,7 +26,6 @@ export class AuthController {
         if (!dto.refreshToken) {
             throw new UnauthorizedException('No refresh token provided');
         }
-        this.logger.log("refresh token provided:", dto.refreshToken);
         const { access_token, refresh_token } = await this.authService.refreshToken(dto.refreshToken);
         return { access_token, refresh_token };
     }
