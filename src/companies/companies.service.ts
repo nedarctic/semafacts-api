@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PaginationDto } from '../common/pagination.dto';
-import { CompanyWhereInput, UserWhereInput } from '../generated/prisma/models';
+import { CompanyWhereInput, IncidentWhereInput, UserWhereInput } from '../generated/prisma/models';
 import { PrismaService } from '../prisma/prisma.service';
 import { R2Service } from '../r2/r2.service';
 import { AddUsersDto } from './dto/add-users.dto';
@@ -367,22 +367,77 @@ export class CompaniesService {
     }
 
     // get a company's incidents
-    async getCompanyIncidents(companyId: string) {
+    async getCompanyIncidents(companyId: string, pagination: PaginationDto) {
         try {
+
+            const {
+                limit = 10,
+                page = 1,
+                search
+            } = pagination;
+
+            const skip = (page - 1) * limit;
+
+            const where: IncidentWhereInput = search
+                ? {
+                    OR: [
+                        {
+                            location: {
+                                contains: search,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            category: {
+                                contains: search,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            description: {
+                                contains: search,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            duration: {
+                                contains: search,
+                                mode: "insensitive",
+                            },
+                        },
+                    ],
+                }
+                : {};
+
             const company = await this.prismaService.company.findUnique({ where: { id: companyId } })
 
             if (!company) throw new CompanyNotFoundException();
 
-            const incidents = await this.prismaService.company.findUnique({
-                where: {
-                    id: companyId
-                },
-                select: {
-                    incidents: true
+            const [incidents, total] = await Promise.all([
+            await this.prismaService.incident.findMany({
+                skip,
+                take: limit,
+                where,
+                orderBy: {
+                    createdAt: "desc"
                 }
-            })
+            }),
+            await this.prismaService.incident.count({
+                where
+            }),
+        ])
 
-            return incidents;
+
+        return {
+            incidents,
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        }
+
         } catch (error) {
             throw new Error(String(error));
         }
