@@ -16,10 +16,6 @@ export class IncidentAuthService {
 
     async validateReporter(code: string, secretCode: string) {
 
-        console.log("VALIDATING REPORTER");
-        console.log("CODE:", code);
-        console.log("SECRET CODE:", secretCode);
-
         const incident = await this.prisma.incident.findUnique({
             where: {
                 incidentIdDisplay: code,
@@ -69,8 +65,8 @@ export class IncidentAuthService {
 
         const accessToken = await this.jwtService.signAsync(payload, { expiresIn: "15m" });
         const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: "7d" });
-
-        return { accessToken, refreshToken, user };
+        
+        return { accessToken, refreshToken, user, incidentId: incident.id };
     }
 
     async refresh(refreshToken: string){
