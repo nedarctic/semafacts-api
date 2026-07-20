@@ -414,29 +414,40 @@ export class CompaniesService {
             if (!company) throw new CompanyNotFoundException();
 
             const [incidents, total] = await Promise.all([
-            await this.prismaService.incident.findMany({
-                skip,
-                take: limit,
-                where,
-                orderBy: {
-                    createdAt: "desc"
+                await this.prismaService.incident.findMany({
+                    skip,
+                    take: limit,
+                    where,
+                    orderBy: {
+                        createdAt: "desc"
+                    }
+                }).then(incidents => incidents.map(({
+                    secretCodeHash,
+                    deadlineAt,
+                    createdAt,
+                    ...incident
+                }) => {
+                    return {
+                        ...incident,
+                        createdAt: createdAt.toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        deadlineAt: deadlineAt?.toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    };
+                })),
+                await this.prismaService.incident.count({
+                    where
+                }),
+            ])
+
+
+            return {
+                incidents,
+                meta: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
                 }
-            }),
-            await this.prismaService.incident.count({
-                where
-            }),
-        ])
-
-
-        return {
-            incidents,
-            meta: {
-                page,
-                limit,
-                total,
-                totalPages: Math.ceil(total / limit)
             }
-        }
 
         } catch (error) {
             throw new Error(String(error));
