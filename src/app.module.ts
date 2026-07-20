@@ -16,6 +16,7 @@ import { SecretCodeModule } from './secret-code/secret-code.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { HandlersModule } from './handlers/handlers.module';
 import { MessagesModule } from './messages/messages.module';
+import { IncidentAuthModule } from './incident-auth/incident-auth.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { MessagesModule } from './messages/messages.module';
     AuditLogModule,
     HandlersModule,
     MessagesModule,
+    IncidentAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
