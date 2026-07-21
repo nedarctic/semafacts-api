@@ -1361,7 +1361,6 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  reportingLinkSlug: 'reportingLinkSlug',
   slaDays: 'slaDays',
   logoKey: 'logoKey',
   logoUrl: 'logoUrl',

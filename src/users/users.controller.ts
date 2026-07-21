@@ -24,9 +24,9 @@ export class UsersController {
     // get user by id
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id')
-    getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
-        return this.usersService.getUserById(id);
+    @Get(':userId')
+    getUserById(@Param('userId', new ParseUUIDPipe()) userId: string) {
+        return this.usersService.getUserById(userId);
     }
 
     // create user

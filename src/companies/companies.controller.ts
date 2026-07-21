@@ -28,26 +28,29 @@ export class CompaniesController {
     // get company by id
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id')
-    async getCompanyById(@Param('id') id: string) {
-        return await this.companiesService.getCompanyById(id);
+    @Get(':companyId')
+    async getCompanyById(@Param('companyId') companyId: string) {
+        return await this.companiesService.getCompanyById(companyId);
     }
 
     // get company users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/users')
-    async getCompanyUsers(@Param('id') id: string) {
-        return await this.companiesService.getCompanyUsers(id);
+    @Get(':companyId/users')
+    async getCompanyUsers(
+        @Param('companyId') companyId: string,
+        @Query() pagination: PaginationDto
+    ) {
+        return await this.companiesService.getCompanyUsers(companyId, pagination);
     }
 
     // get company handlers
-    @Get(':id/handlers/')
+    @Get(':companyId/handlers/')
     async getCompanyHandlers(
-        @Param('id') id: string,
+        @Param('companyId') companyId: string,
         @Query('incidentId') incidentId?: string
     ) {
-        return await this.companiesService.getCompanyHandlers(id, incidentId);
+        return await this.companiesService.getCompanyHandlers(companyId, incidentId);
     }
 
     // get company incidents
@@ -136,9 +139,9 @@ export class CompaniesController {
     // get company reporting page
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/reporting-page')
-    async getCompanyReportingPage(@Param('id') id: string) {
-        return await this.companiesService.getCompanyReportingPage(id);
+    @Get(':companyId/reporting-page')
+    async getCompanyReportingPage(@Param('companyId') companyId: string) {
+        return await this.companiesService.getCompanyReportingPage(companyId);
     }
 
     // create new company
@@ -180,7 +183,7 @@ export class CompaniesController {
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @UseInterceptors(FileInterceptor('image'))
     @Patch(':id')
-    async updateCompany(@UploadedFile() image: Express.Multer.File, @Param('id') id: string, @Body() dto: { name?: string, reportingLinkSlug?: string, slaDays?: string }) {
+    async updateCompany(@UploadedFile() image: Express.Multer.File, @Param('id') id: string, @Body() dto: { name?: string, slaDays?: string }) {
         return await this.companiesService.updateCompany(id, image, dto);
     }
 

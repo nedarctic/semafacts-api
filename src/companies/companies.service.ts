@@ -27,15 +27,7 @@ export class CompaniesService {
     async getCompanyById(id: string) {
 
         const company = await this.prismaService.company.findUnique({
-            where: { id },
-            include: {
-                reportingPage: {
-                    where: {
-                        companyId: id
-                    }
-                },
-                categories: true
-            },
+            where: { id }
         });
 
         this.logger.log(`Company data: ${company}`)
@@ -61,12 +53,6 @@ export class CompaniesService {
                 OR: [
                     {
                         name: {
-                            contains: search,
-                            mode: "insensitive",
-                        },
-                    },
-                    {
-                        reportingLinkSlug: {
                             contains: search,
                             mode: "insensitive",
                         },
@@ -105,17 +91,112 @@ export class CompaniesService {
     }
 
     // get a company's users
-    async getCompanyUsers(companyId: string) {
-        const company = await this.prismaService.company.findUnique({
-            where: { id: companyId },
-            include: { users: true },
-        });
+    async getCompanyUsers(companyId: string, pagination: PaginationDto) {
 
-        if (!company) {
-            throw new CompanyNotFoundException();
+        try {
+            const {
+                limit = 10,
+                page = 1,
+                search
+            } = pagination;
+
+            const skip = (page - 1) * limit;
+            const roleFilter = search
+                ? Object.values(UserRole).find(
+                    role => role.toLowerCase() === search.toLowerCase()
+                )
+                : undefined;
+
+            const usersWhere: UserWhereInput | undefined = search ? {
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        email: {
+                            contains: search,
+                            mode: "insensitive"
+                        }
+                    },
+                    ...(roleFilter ? [
+                        {
+                            role: {
+                                equals: roleFilter
+                            }
+                        }
+                    ] : [])
+                ]
+            } : undefined;
+
+            const company = await this.prismaService.company.findUnique({
+                where: {
+                    id: companyId
+                }
+            })
+
+            if (!company) {
+                throw new CompanyNotFoundException();
+            }
+
+            const [users, total] = await Promise.all([
+                await this.prismaService.company.findUnique({
+                    where: {
+                        id: companyId
+                    },
+                    select: {
+                        users: {
+                            skip,
+                            orderBy: {
+                                createdAt: "desc"
+                            },
+                            take: limit,
+                            where: usersWhere
+                        }
+                    }
+                }).then(res => res!.users).then(users => users.map(({
+                    password,
+                    createdAt,
+                    updatedAt,
+                    ...user
+                }) => ({
+                    ...user,
+                    createdAt: createdAt.toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    updatedAt: updatedAt.toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' }),
+                }))),
+                await this.prismaService.company.findUnique({
+                    where: {
+                        id: companyId,
+                    },
+                    select: {
+                        _count: {
+                            select: {
+                                users: {
+                                    where: usersWhere,
+
+                                },
+
+                            }
+                        }
+                    }
+                }).then(res => res?._count.users!)
+            ]);
+
+            return {
+                users,
+                meta: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            }
+
+        } catch (error) {
+            throw error;
         }
-
-        return company.users;
     }
 
     // get the total users of a company
@@ -317,14 +398,18 @@ export class CompaniesService {
     async getCompanyReportingPage(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
-            include: { reportingPage: true },
+            include: { reportingPage: true, categories: true },
         });
 
         if (!company) {
             throw new CompanyNotFoundException();
         }
 
-        return company.reportingPage;
+        const { categories, reportingPage } = company;
+        return {
+            categories,
+            reportingPage
+        }
     }
 
     // get a company's handlers, if incidentId is provided, get handlers for other incidents
@@ -583,7 +668,7 @@ export class CompaniesService {
     }
 
     // update a company's general info
-    async updateCompany(id: string, image: Express.Multer.File, dto: { name?: string, reportingLinkSlug?: string, slaDays?: string }) {
+    async updateCompany(id: string, image: Express.Multer.File, dto: { name?: string, slaDays?: string }) {
         const company = await this.prismaService.company.findUnique({
             where: { id }
         });
@@ -603,7 +688,6 @@ export class CompaniesService {
             where: { id },
             data: {
                 name: dto.name,
-                reportingLinkSlug: dto.reportingLinkSlug,
                 slaDays: dto.slaDays,
                 logoKey: imageKey,
                 logoUrl: imageUrl,
@@ -664,8 +748,4 @@ export class CompaniesService {
         await this.auditLog.createAuditLog("Category deleted", `${company.name} deleted the category name: ${res.categoryName}`, companyId);
         return res;
     }
-
-
-
-
 }

@@ -26,19 +26,18 @@ model User {
 }
 
 model Company {
-  id                String         @id @default(uuid()) @db.Uuid
-  name              String         @unique
-  reportingLinkSlug String?
-  slaDays           String?        @default("7")
-  logoKey           String?
-  logoUrl           String?
-  users             User[]
-  categories        Category[]
-  reportingPage     ReportingPage?
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt()
-  incidents         Incident[]
-  auditLogs         AuditLog[]
+  id            String         @id @default(uuid()) @db.Uuid
+  name          String         @unique
+  slaDays       String?        @default("7")
+  logoKey       String?
+  logoUrl       String?
+  users         User[]
+  categories    Category[]
+  reportingPage ReportingPage?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt()
+  incidents     Incident[]
+  auditLogs     AuditLog[]
 }
 
 model Category {
