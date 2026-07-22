@@ -13,7 +13,8 @@ export class AttachmentsService {
 
     // upload new attachments
     async uploadNewAttachments(attachments: Express.Multer.File[], incidentId: string, uploadedBy: AttachmentUploader) {
-        const incident = await this.prisma.incident.findUnique({
+        try {
+            const incident = await this.prisma.incident.findUnique({
             where: {
                 id: incidentId
             }
@@ -31,13 +32,13 @@ export class AttachmentsService {
                 fileKey: key,
                 fileUrl: publicUrl,
                 uploadedBy,
-                mimetype: attachment.mimetype
+                mimeType: attachment.mimetype
             } as {
                 incidentId: string;
                 fileKey: string;
                 fileUrl: string;
                 uploadedBy: AttachmentUploader;
-                mimetype: string;
+                mimeType: string;
             };
             return attachmentData;
         })
@@ -47,5 +48,8 @@ export class AttachmentsService {
         return await this.prisma.attachment.createMany({
             data: attachmentsData
         })
+    } catch(error){
+        throw error;
+    }
     }
 }
