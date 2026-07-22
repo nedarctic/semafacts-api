@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Query } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Query, Param } from '@nestjs/common';
 import { InvitesService } from './invites.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -10,10 +10,10 @@ export class InvitesController {
     constructor(private readonly invitesService: InvitesService){}
 
     // create invite
-    @Post()
+    @Post(":companyId")
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-    async createInvite(@Body('email') email: string, @Body('companyId') companyId: string) {
+    async createInvite(@Body('email') email: string, @Param('companyId') companyId: string) {
         await this.invitesService.createInvite(email, companyId);
         return { message: `Invite sent to ${email}` };
     }
