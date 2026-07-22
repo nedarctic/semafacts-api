@@ -17,6 +17,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
 import { HandlersModule } from './handlers/handlers.module';
 import { MessagesModule } from './messages/messages.module';
 import { IncidentAuthModule } from './incident-auth/incident-auth.module';
+import { AttachmentsModule } from './attachments/attachments.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { IncidentAuthModule } from './incident-auth/incident-auth.module';
     HandlersModule,
     MessagesModule,
     IncidentAuthModule,
+    AttachmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
