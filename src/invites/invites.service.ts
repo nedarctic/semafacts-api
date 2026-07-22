@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { InviteTokenExpiredException } from './exceptions/invite-token-expired.exception';
 import { InviteTokenNotFoundException } from './exceptions/invite-token-not-found.exception';
 import { InviteAlreadyUsedException } from './exceptions/invite-token-already-used.exception';
+import { UserStatus } from '../generated/prisma/enums';
 
 @Injectable()
 export class InvitesService {
@@ -15,47 +16,58 @@ export class InvitesService {
         private readonly emailService: EmailService,
         private readonly configService: ConfigService,
         private readonly usersService: UsersService
-    ){}
+    ) { }
 
     private generateToken(): string {
         return crypto.randomBytes(32).toString('hex');
     }
 
     // create invite
-    async createInvite(email: string, companyId: string){
-        const rawToken = this.generateToken();
-        const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
-        const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    async createInvite(email: string, companyId: string) {
 
-        // get user id using email
-        const user = await this.usersService.getUserByEmail(email);
+        try {
+            const rawToken = this.generateToken();
+            const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+            const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-        await this.prismaService.inviteToken.create({
-            data: {
-                userId: user.id,
-                tokenHash,
-                expiresAt
+            // get user id using email
+            const user = await this.usersService.getUserByEmail(email);
+
+            if (user.status === UserStatus.ACTIVE) {
+                return {
+                    message: "User already active"
+                }
             }
-        });
 
-        // get company name using company id
-        const company = await this.prismaService.company.findUnique({
-            where: { id: companyId }
-        });
+            await this.prismaService.inviteToken.create({
+                data: {
+                    userId: user.id,
+                    tokenHash,
+                    expiresAt
+                }
+            });
 
-        // send the email with the raw token
-        const inviteLink = new URL(`${this.configService.get('FRONTEND_URL')}/invites/verify?token=${rawToken}`);
-        const emailContent = `
+            // get company name using company id
+            const company = await this.prismaService.company.findUnique({
+                where: { id: companyId }
+            });
+
+            // send the email with the raw token
+            const inviteLink = new URL(`${this.configService.get('FRONTEND_URL')}/invites/verify?token=${rawToken}`);
+            const emailContent = `
             <p>You have been invited to join ${company?.name}. Click the link below to accept the invitation:</p>
             <a href="${inviteLink}">Accept Invite</a>
             <p>This link will expire in 24 hours.</p>
         `;
 
-        await this.emailService.sendEmail(email, `You are invited to join ${company?.name}`, emailContent);
+            await this.emailService.sendEmail(email, `You are invited to join ${company?.name}`, emailContent);
+        } catch (error) {
+            throw error;
+        }
     }
 
     // verify invite
-    async verifyInvite(token: string){
+    async verifyInvite(token: string) {
         // hash the incoming token
         const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
@@ -86,5 +98,5 @@ export class InvitesService {
         await this.usersService.updateUser(invite.userId, { status: 'ACTIVE' });
 
         return invite.userId;
-    }    
+    }
 }
