@@ -33,19 +33,20 @@ export class IncidentsController {
     async getIncident(@Param('incidentId') incidentId: string) {
         return await this.incidentsService.getIncident(incidentId);
     }
+    
+    // get incident non-handlers
+    @Get(":incidentId/:companyId/non-handlers")
+    async getIncidentNonHandlers (
+        @Param("incidentId") incidentId: string,
+        @Param("companyId") companyId: string,
+    ) {
+        return await this.incidentsService.getNonIncidentHandlers(incidentId, companyId);
+    }
 
     // get company incidents
     @Get('company/:companyId')
     async getCompanyIncidents (@Param("companyId") companyId: string) {
         return await this.incidentsService.getCompanyIncidents(companyId);
-    }
-
-    //get incident handlers
-    @Get(':incidentId/handlers')
-    async getIncidentHandlers(
-        @Param('incidentId') incidentId: string
-    ) {
-        return await this.incidentsService.getCompanyIncidentHandlers(incidentId)
     }
 
     // create new incident
@@ -76,5 +77,4 @@ export class IncidentsController {
     async deleteIncident(@Param('incidentId') incidentId: string) {
         return await this.incidentsService.deleteIncident(incidentId);
     }
-
 }

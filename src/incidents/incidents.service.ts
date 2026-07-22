@@ -9,7 +9,8 @@ import { CreateIncidentDto } from './dto/create-incident.dto';
 import { UpdateIncidentDto } from './dto/update-incident.dto';
 import { IncidentNotFoundException } from './exceptions/incident-not-found.exception';
 import { CompanyNotFoundException } from '../companies/exceptions/company-not-found.exception';
-import { AttachmentUploader } from '../generated/prisma/enums';
+import { AttachmentUploader, UserRole, UserStatus } from '../generated/prisma/enums';
+import { User } from '../generated/prisma/client';
 
 @Injectable()
 export class IncidentsService {
@@ -103,29 +104,70 @@ export class IncidentsService {
         }
     }
 
-    // get company incident handlers
-    async getCompanyIncidentHandlers(incidentId: string) {
+    // get incident non-handlers
+    async getNonIncidentHandlers(incidentId: string, companyId: string) {
         try {
-
-            const incident = await this.prisma.incident.findUnique({ where: { id: incidentId } });
-            if (!incident) throw new IncidentNotFoundException(incidentId);
-
-            const res = await this.prisma.incident.findUnique({
+            const incident = await this.prisma.incident.findUnique({
                 where: {
                     id: incidentId
                 },
                 select: {
-                    handlers: {
-                        include: {
-                            handler: true
+                    handlers: true
+                }
+            });
+
+            if (!incident) {
+                throw new IncidentNotFoundException(incidentId);
+            }
+
+            const { handlers: incidentHandlers } = incident;
+
+            const company = await this.prisma.company.findUnique({
+                where: {
+                    id: companyId
+                },
+                select: {
+                    users: {
+                        where: {
+                            role: UserRole.HANDLER
                         }
                     }
                 }
-            })
+            });
 
-            return res;
+            if (!company) {
+                throw new CompanyNotFoundException();
+            }
+
+            const { users: companyHandlers } = company;
+
+            const companyHandlersIdsSet = new Set<string>();
+
+            companyHandlers.map(handler => {
+                companyHandlersIdsSet.add(handler.id)
+            });
+
+            incidentHandlers.map(handler => {
+                companyHandlersIdsSet.has(handler.id) && companyHandlersIdsSet.delete(handler.id)
+            });
+
+            const nonIncidentHandlerIds = companyHandlersIdsSet;
+
+            const nonIncidentHandlers = companyHandlers
+                .filter(handler => nonIncidentHandlerIds.has(handler.id) && handler.status === UserStatus.ACTIVE).map(({
+                    refreshToken,
+                    updatedAt,
+                    createdAt,
+                    password,
+                    ...handler
+                }) => {
+                    return { ...handler }
+                });
+
+            return nonIncidentHandlers;
+
         } catch (error) {
-            throw new Error(String(error));
+            throw error;
         }
     }
 
