@@ -154,9 +154,9 @@ export class UsersService {
     // create a user
     async createUser(dto: CreateUserDto) {
         try {
-            const hashedPassword = await bcrypt.hash(dto.password, 10);
-            dto.password = hashedPassword;
-            return await this.prisma.user.create({ data: { ...dto } })
+            const hashedPassword = dto.password ? await bcrypt.hash(dto.password, 10) : undefined;
+            
+            return await this.prisma.user.create({ data: { ...dto, password: hashedPassword } })
         } catch (error) {
             throw error;
         }
