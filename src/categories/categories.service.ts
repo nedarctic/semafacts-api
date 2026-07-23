@@ -50,6 +50,9 @@ export class CategoriesService {
 
             const newCategories = categories.filter(category => !existingIdsSet.has(category.id)).map(category => ({...category, companyId}));
             const updatedCategories = categories.filter(category => existingIdsSet.has(category.id)).map(category => ({...category, companyId}));
+            const updatedCategoriesIds = new Set<string>();
+            updatedCategories.map(cat => updatedCategoriesIds.add(cat.id));
+            const deletedCategoriesIds = existingCategories.filter(cat => !updatedCategoriesIds.has(cat.id)).map(cat => cat.id);
 
             await this.prisma.$transaction(
                 updatedCategories.map(category => this.prisma.category.update({
@@ -66,6 +69,14 @@ export class CategoriesService {
             await this.prisma.category.createMany({
                 data: newCategories
             });
+
+            await this.prisma.category.deleteMany({
+                where: {
+                    id: {
+                        in: deletedCategoriesIds
+                    }
+                }
+            })
 
             return {
                 message: "Category updates succeeded"
