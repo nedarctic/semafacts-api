@@ -669,33 +669,36 @@ export class CompaniesService {
 
     // update a company's general info
     async updateCompany(id: string, image: Express.Multer.File, dto: { name?: string, slaDays?: string }) {
-        const company = await this.prismaService.company.findUnique({
-            where: { id }
-        });
+        try {
+            const company = await this.prismaService.company.findUnique({
+                where: { id }
+            });
 
-        if (!company) {
-            throw new CompanyNotFoundException();
-        }
-
-        let imageKey, imageUrl;
-        if (image instanceof File && image.size > 0) {
-            const { key, publicUrl } = await this.r2Service.uploadFile(image, 'logos')
-            imageKey = key;
-            imageUrl = publicUrl;
-        }
-
-        const res = await this.prismaService.company.update({
-            where: { id },
-            data: {
-                name: dto.name,
-                slaDays: dto.slaDays,
-                logoKey: imageKey,
-                logoUrl: imageUrl,
+            if (!company) {
+                throw new CompanyNotFoundException();
             }
-        });
 
-        await this.auditLog.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
-        return res;
+            if(company.logoKey && image.size > 0){
+                await this.r2Service.deleteFile(company.logoKey)
+            }
+
+            const { key, publicUrl } = image.size > 0 ? await this.r2Service.uploadFile(image, "logos") : {};
+
+            const res = await this.prismaService.company.update({
+                where: { id },
+                data: {
+                    name: dto.name,
+                    slaDays: dto.slaDays,
+                    logoKey: key,
+                    logoUrl: publicUrl,
+                }
+            });
+
+            await this.auditLog.createAuditLog("Company updated", `${res.name} successfully updated`, res.id)
+            return res;
+        } catch (error) {
+            throw error;
+        }
     }
 
     // update a specific company's reporting category
