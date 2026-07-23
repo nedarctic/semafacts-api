@@ -19,6 +19,7 @@ import { MessagesModule } from './messages/messages.module';
 import { IncidentAuthModule } from './incident-auth/incident-auth.module';
 import { AttachmentsModule } from './attachments/attachments.module';
 import { ReportingPageModule } from './reporting-page/reporting-page.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { ReportingPageModule } from './reporting-page/reporting-page.module';
     IncidentAuthModule,
     AttachmentsModule,
     ReportingPageModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
