@@ -67,73 +67,73 @@ export class CompaniesController {
     // get total company users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-users')
-    async getTotalCompanyUsers(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyUsers(id);
+    @Get(':companyId/total-users')
+    async getTotalCompanyUsers(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyUsers(companyId);
     }
 
     // get company total admins
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-admins')
-    async getTotalCompanyAdmins(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyAdmins(id);
+    @Get(':companyId/total-admins')
+    async getTotalCompanyAdmins(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyAdmins(companyId);
     }
 
     // get company total handlers
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-handlers')
-    async getTotalCompanyHandlers(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyHandlers(id);
+    @Get(':companyId/total-handlers')
+    async getTotalCompanyHandlers(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyHandlers(companyId);
     }
 
     // get company total invited users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-invited-users')
-    async getTotalCompanyInvitedUsers(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyInvitedUsers(id);
+    @Get(':companyId/total-invited-users')
+    async getTotalCompanyInvitedUsers(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyInvitedUsers(companyId);
     }
 
     // get company total active users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-active-users')
-    async getTotalCompanyActiveUsers(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyActiveUsers(id);
+    @Get(':companyId/total-active-users')
+    async getTotalCompanyActiveUsers(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyActiveUsers(companyId);
     }
 
     // get company total inactive users
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-inactive-users')
-    async getTotalCompanyInactiveUsers(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyInactiveUsers(id);
+    @Get(':companyId/total-inactive-users')
+    async getTotalCompanyInactiveUsers(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyInactiveUsers(companyId);
     }
 
     // get company total incidents
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/total-incidents')
-    async getTotalCompanyIncidents(@Param('id') id: string) {
-        return await this.companiesService.getTotalCompanyIncidents(id);
+    @Get(':companyId/total-incidents')
+    async getTotalCompanyIncidents(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyIncidents(companyId);
     }
 
     // get company audit logs
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/audit-logs')
-    async getCompanyAuditLogs(@Param('id') id: string) {
-        return await this.companiesService.getCompanyAuditLogs(id);
+    @Get(':companyId/audit-logs')
+    async getCompanyAuditLogs(@Param('companyId') companyId: string) {
+        return await this.companiesService.getCompanyAuditLogs(companyId);
     }
 
     // get company categories
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Get(':id/categories')
-    async getCompanyCategories(@Param('id') id: string) {
-        return await this.companiesService.getCompanyCategories(id);
+    @Get(':companyId/categories')
+    async getCompanyCategories(@Param('companyId') companyId: string) {
+        return await this.companiesService.getCompanyCategories(companyId);
     }
 
     // get company reporting page
@@ -155,67 +155,66 @@ export class CompaniesController {
     // add users to company
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Post(':id/users')
-    async addUsersToCompany(@Param('id') id: string, @Body() body: AddUsersDto) {
-        return await this.companiesService.addUsersToCompany(id, body);
+    @Post(':companyId/users')
+    async addUsersToCompany(@Param('companyId') companyId: string, @Body() body: AddUsersDto) {
+        return await this.companiesService.addUsersToCompany(companyId, body);
     }
 
     // add categories to company
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Post(':id/categories')
-    async addCategoriesToCompany(@Param('id') id: string, @Body() dto: { categoryName: string }) {
-        return await this.companiesService.addCategoryToCompany(id, dto.categoryName);
+    @Post(':companyId/categories')
+    async addCategoriesToCompany(@Param('companyId') companyId: string, @Body() dto: { categoryName: string }) {
+        return await this.companiesService.addCategoryToCompany(companyId, dto.categoryName);
     }
 
     // send invitation email to handler
     @UseGuards(RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-    @Post(':id/invite')
-    async inviteHandler(@Param('id') id: string, @Body() dto: { email: string }) { 
-        this.logger.log(`Company ID received: ${id}`);
+    @Post(':companyId/invite')
+    async inviteHandler(@Param('companyId') companyId: string, @Body() dto: { email: string }) { 
         this.logger.log(`Email received: ${dto.email}`);
-        return await this.companiesService.sendInvitationEmail(dto.email, id);
-    }
-
-    // update company details
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @UseInterceptors(FileInterceptor('image'))
-    @Patch(':id')
-    async updateCompany(@UploadedFile() image: Express.Multer.File, @Param('id') id: string, @Body() dto: { name?: string, slaDays?: string }) {
-        return await this.companiesService.updateCompany(id, image, dto);
+        return await this.companiesService.sendInvitationEmail(dto.email, companyId);
     }
 
     // add reporting page to company
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Post(':id/reporting-page')
-    async addReportingPageToCompany(@Param('id') id: string, @Body() body: CreateReportingPageDto) {
-        return await this.companiesService.addReportingPageToCompany(id, body);
+    @Post(':companyId/reporting-page')
+    async addReportingPageToCompany(@Param('companyId') companyId: string, @Body() body: CreateReportingPageDto) {
+        return await this.companiesService.addReportingPageToCompany(companyId, body);
+    }
+
+    // update company details
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @UseInterceptors(FileInterceptor('logo'))
+    @Patch(':companyId')
+    async updateCompany(@UploadedFile() logo: Express.Multer.File, @Param('companyId') companyId: string, @Body() dto: { name?: string, slaDays?: string }) {
+        return await this.companiesService.updateCompany(companyId, logo, dto);
     }
 
     // update company category name
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Patch(':id/categories/:categoryId')
-    async updateCompanyCategory(@Param('id') id: string, @Param('categoryId') categoryId: string, @Body() body: { categoryName: string }) {
-        return await this.companiesService.updateCompanyCategory(id, categoryId, body.categoryName);
+    @Patch(':companyId/categories/:categoryId')
+    async updateCompanyCategory(@Param('companyId') companyId: string, @Param('categoryId') categoryId: string, @Body() body: { categoryName: string }) {
+        return await this.companiesService.updateCompanyCategory(companyId, categoryId, body.categoryName);
     }
 
     // update reporting page    
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Patch(':id/reporting-page')
-    async updateReportingPage(@Param('id') id: string, @Body() body: ReportingPageDto) {
-        return this.companiesService.updateReportingPage(id, body);
+    @Patch(':companyId/reporting-page')
+    async updateReportingPage(@Param('companyId') companyId: string, @Body() body: ReportingPageDto) {
+        return this.companiesService.updateReportingPage(companyId, body);
     }
 
     // delete category from company
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @Delete(':id/categories/:categoryId')
-    async deleteCategoryFromCompany(@Param('id') id: string, @Param('categoryId') categoryId: string) {
-        return await this.companiesService.deleteCategoryFromCompany(id, categoryId);
+    @Delete(':companyId/categories/:categoryId')
+    async deleteCategoryFromCompany(@Param('companyId') companyId: string, @Param('categoryId') categoryId: string) {
+        return await this.companiesService.deleteCategoryFromCompany(companyId, categoryId);
     }
 }
