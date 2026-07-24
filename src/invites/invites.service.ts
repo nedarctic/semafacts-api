@@ -8,6 +8,8 @@ import { InviteTokenExpiredException } from './exceptions/invite-token-expired.e
 import { InviteTokenNotFoundException } from './exceptions/invite-token-not-found.exception';
 import { InviteAlreadyUsedException } from './exceptions/invite-token-already-used.exception';
 import { UserStatus } from '../generated/prisma/enums';
+import { UserNotFoundException } from '../users/exceptions/user-not-found.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class InvitesService {
@@ -53,7 +55,7 @@ export class InvitesService {
             });
 
             // send the email with the raw token
-            const inviteLink = new URL(`${this.configService.get('FRONTEND_URL')}/invites/verify?token=${rawToken}`);
+            const inviteLink = `${this.configService.get('FRONTEND_URL')}/invite-verification?token=${rawToken}`;
             const emailContent = `
             <p>You have been invited to join ${company?.name}. Click the link below to accept the invitation:</p>
             <a href="${inviteLink}">Accept Invite</a>
@@ -67,36 +69,61 @@ export class InvitesService {
     }
 
     // verify invite
-    async verifyInvite(token: string) {
-        // hash the incoming token
-        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    async verifyInvite(token: string, dto: { password: string; }) {
+        try {
+            // hash the incoming token
+            const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
-        // find the invite token in the database
-        const invite = await this.prismaService.inviteToken.findUnique({
-            where: { tokenHash }
-        });
+            // find the invite token in the database
+            const invite = await this.prismaService.inviteToken.findUnique({
+                where: { tokenHash }
+            });
 
-        if (!invite) {
-            throw new InviteTokenNotFoundException();
+            if (!invite) {
+                throw new InviteTokenNotFoundException();
+            }
+
+            const user = this.prismaService.user.findUnique({
+                where: {
+                    id: invite.userId
+                }
+            });
+
+            if(!user){
+                throw new UserNotFoundException()
+            }
+
+            // update the user password
+            const hashedPassword = await bcrypt.hash(dto.password, 10);
+            await this.prismaService.user.update({
+                where: {
+                    id: invite.userId
+                },
+                data: {
+                    password: hashedPassword
+                }
+            })
+
+            if (invite.expiresAt < new Date()) {
+                throw new InviteTokenExpiredException();
+            }
+
+            if (invite.used) {
+                throw new InviteAlreadyUsedException();
+            }
+
+            // mark the invite as used
+            await this.prismaService.inviteToken.update({
+                where: { id: invite.id },
+                data: { used: true }
+            });
+
+            // mark the user as active
+            await this.usersService.updateUser(invite.userId, { status: 'ACTIVE' });
+
+            return invite.userId;
+        } catch (error) {
+            throw error;
         }
-
-        if (invite.expiresAt < new Date()) {
-            throw new InviteTokenExpiredException();
-        }
-
-        if (invite.used) {
-            throw new InviteAlreadyUsedException();
-        }
-
-        // mark the invite as used
-        await this.prismaService.inviteToken.update({
-            where: { id: invite.id },
-            data: { used: true }
-        });
-
-        // mark the user as active
-        await this.usersService.updateUser(invite.userId, { status: 'ACTIVE' });
-
-        return invite.userId;
     }
 }
