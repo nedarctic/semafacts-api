@@ -2,56 +2,67 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import * as nodemailer from 'nodemailer';
+import { PrismaService } from '../prisma/prisma.service';
+import { CompanyNotFoundException } from '../companies/exceptions/company-not-found.exception';
 
 @Injectable()
 export class EmailService {
-    private readonly logger = new Logger(EmailService.name);
-    private resend: Resend;
-    private transporter: nodemailer.Transporter;
+  private readonly logger = new Logger(EmailService.name);
+  private resend: Resend;
+  private transporter: nodemailer.Transporter;
 
-    constructor(
-        private configService: ConfigService
-    ) {
-        this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
-        this.transporter = nodemailer.createTransport({
-            host: this.configService.get<string>('SMTP_HOST'),
-            port: this.configService.get<number>('SMTP_PORT'),
-            secure: true,
-            auth: {
-                user: this.configService.get<string>('SMTP_USERNAME'),
-                pass: this.configService.get<string>('SMTP_PASSWORD'),
-            }
-        })
+  constructor(
+    private configService: ConfigService,
+    private readonly prisma: PrismaService
+  ) {
+    this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
+    this.transporter = nodemailer.createTransport({
+      host: this.configService.get<string>('SMTP_HOST'),
+      port: this.configService.get<number>('SMTP_PORT'),
+      secure: true,
+      auth: {
+        user: this.configService.get<string>('SMTP_USERNAME'),
+        pass: this.configService.get<string>('SMTP_PASSWORD'),
+      }
+    })
+  }
+
+  /**
+   * Sends an email using the Resend API.
+   * @param to - The recipient's email address.
+   * @param subject - The subject of the email.
+   * @param html - The HTML content of the email.
+   * @returns A promise that resolves when the email is sent successfully.
+   */
+  async sendEmail(to: string, subject: string, html: string): Promise<{ message: string }> {
+    try {
+      await this.transporter.sendMail({
+        from: this.configService.get<string>('SMTP_USERNAME'),
+        to: to,
+        subject: subject,
+        html: html
+      });
+      return { message: `Email sent to ${to}` };
+    } catch (error) {
+      this.logger.error('Error sending email:', error);
+      throw new Error('Failed to send email');
+    }
+  }
+
+  async sendInviteMail(toEmail: string, companyId: string) {
+
+    const company = await this.prisma.company.findUnique({ where: { id: companyId } });
+    if (!company) {
+      throw new CompanyNotFoundException()
     }
 
-    /**
-     * Sends an email using the Resend API.
-     * @param to - The recipient's email address.
-     * @param subject - The subject of the email.
-     * @param html - The HTML content of the email.
-     * @returns A promise that resolves when the email is sent successfully.
-     */
-    async sendEmail(to: string, subject: string, html: string): Promise<{ message: string }> {
-        try {
-            await this.resend.emails.send({
-                from: 'SemaFacts <onboarding@resend.dev>',
-                to: to,
-                subject: subject,
-                html: html
-            });
-            return { message: `Email sent to ${to}` };
-        } catch (error) {
-            this.logger.error('Error sending email:', error);
-            throw new Error('Failed to send email');
-        }
-    }
+    const companyName = company.name;
 
-    async sendInviteMail(toEmail: string, companyName: string) {
-        return await this.transporter.sendMail({
-            from: this.configService.get<string>('SMTP_USERNAME'),
-            to: toEmail,
-            subject: 'INCIDENT HANDLER INVITATION',
-            html: `
+    return await this.transporter.sendMail({
+      from: this.configService.get<string>('SMTP_USERNAME'),
+      to: toEmail,
+      subject: 'INCIDENT HANDLER INVITATION',
+      html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -112,6 +123,6 @@ export class EmailService {
       </body>
       </html>
     `,
-        })
-    }
+    })
+  }
 }
