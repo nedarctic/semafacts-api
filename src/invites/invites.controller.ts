@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Query, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Query, Param, Logger } from '@nestjs/common';
 import { InvitesService } from './invites.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -7,21 +7,29 @@ import { UserRole } from '../generated/prisma/enums';
 
 @Controller('invites')
 export class InvitesController {
-    constructor(private readonly invitesService: InvitesService){}
+    private readonly logger = new Logger(InvitesController.name)
+    constructor(private readonly invitesService: InvitesService) { }
 
     // create invite
-    @Post(":companyId")
+    @Post("create/:companyId")
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-    async createInvite(@Body('email') email: string, @Param('companyId') companyId: string) {
-        await this.invitesService.createInvite(email, companyId);
-        return { message: `Invite sent to ${email}` };
+    async createInvite(
+        @Body() dto: { email: string },
+        @Param('companyId') companyId: string
+    ) {
+        console.log("email at the controller", dto.email)
+        await this.invitesService.createInvite(dto.email, companyId);
+        return { message: `Invite sent to ${dto.email}` };
     }
 
     // verify invite
     @Post('verify')
-    async verifyInvite(@Query('token') token: string) {
-        const userId = await this.invitesService.verifyInvite(token);
+    async verifyInvite(
+        @Query('token') token: string,
+        @Body() dto: { password: string }
+    ) {
+        const userId = await this.invitesService.verifyInvite(token, dto);
         return { message: 'Invite verified', userId };
     }
 }
