@@ -141,28 +141,13 @@ export class IncidentsService {
 
             const { users: companyHandlers } = company;
 
-            const companyHandlersIdsSet = new Set<string>();
-
-            companyHandlers.map(handler => {
-                companyHandlersIdsSet.add(handler.id)
-            });
+            const incidentHandlersIdsSet = new Set();
 
             incidentHandlers.map(handler => {
-                companyHandlersIdsSet.has(handler.id) && companyHandlersIdsSet.delete(handler.id)
+                incidentHandlersIdsSet.add(handler.handlerId)
             });
 
-            const nonIncidentHandlerIds = companyHandlersIdsSet;
-
-            const nonIncidentHandlers = companyHandlers
-                .filter(handler => nonIncidentHandlerIds.has(handler.id) && handler.status === UserStatus.ACTIVE).map(({
-                    refreshToken,
-                    updatedAt,
-                    createdAt,
-                    password,
-                    ...handler
-                }) => {
-                    return { ...handler }
-                });
+            const nonIncidentHandlers = companyHandlers.filter(handler => !incidentHandlersIdsSet.has(handler.id));
 
             return nonIncidentHandlers;
 
@@ -181,7 +166,11 @@ export class IncidentsService {
             include: {
                 company: true,
                 attachments: true,
-                handlers: true,
+                handlers: {
+                    include: {
+                        handler: true
+                    }
+                },
                 messages: true,
                 reporter: true
             }
