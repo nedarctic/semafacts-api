@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Query, Param, Logger } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Query, Param, Logger, Patch } from '@nestjs/common';
 import { InvitesService } from './invites.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -32,4 +32,5 @@ export class InvitesController {
         const userId = await this.invitesService.verifyInvite(token, dto);
         return { message: 'Invite verified', userId };
     }
+
 }
