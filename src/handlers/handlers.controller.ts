@@ -23,9 +23,10 @@ export class HandlersController {
     async assignHandler(
         @Param('handlerId') handlerId: string,
         @Param('incidentId') incidentId: string,
+        @Body() dto: { email: string }
     ) {
-        this.logger.log(`Incident ID: ${incidentId}, handler ID: ${handlerId}`)
-        return await this.handlersService.assignHandler(handlerId, incidentId)
+        this.logger.log(`Incident ID: ${incidentId}, handler ID: ${handlerId}, email: ${dto.email}`)
+        return await this.handlersService.assignHandler(handlerId, incidentId, dto.email)
     }
 
     // assign handlers to an incident
