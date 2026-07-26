@@ -23,7 +23,7 @@ export class UsersController {
 
     // get user by id
     @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.HANDLER)
     @Get(':userId')
     getUserById(@Param('userId', new ParseUUIDPipe()) userId: string) {
         return this.usersService.getUserById(userId);
@@ -39,7 +39,7 @@ export class UsersController {
 
     // update user
     @UseGuards(RolesGuard)
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.HANDLER)
     @Patch(':id')
     updateUser(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: UpdateUserDto) {
         return this.usersService.updateUser(id, body);
