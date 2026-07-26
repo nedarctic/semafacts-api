@@ -7,13 +7,19 @@ export class HandlersController {
     private readonly logger = new Logger(HandlersController.name)
     constructor(private readonly handlersService: HandlersService) { }
 
-    // get handler incidents
+    // get handler incidents: paginated
     @Get(':handlerId/incidents')
     async getHandlerIncidents(
         @Param('handlerId') handlerId: string,
         @Query() pagination: PaginationDto
     ) {
         return this.handlersService.getHandlerIncidents(handlerId, pagination);
+    }
+
+    // get handler's incidents: non-paginated
+    @Get(":handlerId/incidents/non-paginated")
+    async gethandlerIncidentsNonPaginated (@Param("handlerId") handlerId: string) {
+        return await this.handlersService.getHandlerIncidentsNonPaginated(handlerId);
     }
 
     // get handler details

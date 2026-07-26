@@ -31,7 +31,7 @@ export class HandlersService {
         }
     }
 
-    // get a handler's incidents
+    // get a handler's incidents: paginated
     async getHandlerIncidents(handlerId: string, pagination: PaginationDto) {
         try {
 
@@ -100,6 +100,37 @@ export class HandlersService {
             }
         } catch (error) {
             throw new Error(String(error));
+        }
+    }
+
+    // get a handlers incidents: non-paginated
+    async getHandlerIncidentsNonPaginated (handlerId: string) {
+        try {
+
+            const handler = await this.prisma.user.findUnique({
+                where: {
+                    id: handlerId
+                }
+            });
+
+            if(!handler){
+                throw new UserNotFoundException();
+            }
+
+            const incidents = await this.prisma.incident.findMany({
+                where: {
+                    handlers: {
+                        some: {
+                            handlerId
+                        }
+                    }
+                }
+            })
+
+            return incidents;
+            
+        } catch (error) {
+            throw error;
         }
     }
 
