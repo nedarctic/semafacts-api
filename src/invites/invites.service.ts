@@ -122,6 +122,14 @@ export class InvitesService {
 `
 
             await this.emailService.sendEmail(email, `You are invited to join ${company?.name}`, emailContent);
+            return await this.prismaService.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    status: UserStatus.INVITED
+                }
+            });
         } catch (error) {
             throw error;
         }
