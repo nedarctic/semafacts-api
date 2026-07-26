@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Patch, Post, Logger, Delete, Proppatch, Body } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Post, Logger, Delete, Proppatch, Body, Query } from '@nestjs/common';
 import { HandlersService } from './handlers.service';
+import { PaginationDto } from '../common/pagination.dto';
 
 @Controller('handlers')
 export class HandlersController {
@@ -8,8 +9,11 @@ export class HandlersController {
 
     // get handler incidents
     @Get(':handlerId/incidents')
-    async getHandlerIncidents(@Param('handlerId') handlerId: string) {
-        return this.handlersService.getHandlerIncidents(handlerId);
+    async getHandlerIncidents(
+        @Param('handlerId') handlerId: string,
+        @Query() pagination: PaginationDto
+    ) {
+        return this.handlersService.getHandlerIncidents(handlerId, pagination);
     }
 
     // get handler details
