@@ -31,7 +31,9 @@ export class UsersService {
             throw new UserNotFoundException();
         }
 
-        return user;
+        const { password, ...rest} = user;
+
+        return rest;
     }
 
     // get user by email
@@ -155,7 +157,7 @@ export class UsersService {
     async createUser(dto: CreateUserDto) {
         try {
             const hashedPassword = dto.password ? await bcrypt.hash(dto.password, 10) : undefined;
-            
+
             return await this.prisma.user.create({ data: { ...dto, password: hashedPassword } })
         } catch (error) {
             throw error;
