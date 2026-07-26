@@ -11,16 +11,16 @@ export class CategoriesController {
     constructor(
         private readonly categoriesService: CategoriesService
     ) { }
-
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+        
     @Get(":companyId")
-    async createCategories(
+    async getCategories(
         @Param("companyId") companyId: string
     ) { 
         return await this.categoriesService.getCategories(companyId)
     }
 
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     @Patch(":companyId/update-categories")
     async updateCategories (
         @Param("companyId") companyId: string,
