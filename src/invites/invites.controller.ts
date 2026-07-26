@@ -18,7 +18,6 @@ export class InvitesController {
         @Body() dto: { email: string },
         @Param('companyId') companyId: string
     ) {
-        console.log("email at the controller", dto.email)
         await this.invitesService.createInvite(dto.email, companyId);
         return { message: `Invite sent to ${dto.email}` };
     }
