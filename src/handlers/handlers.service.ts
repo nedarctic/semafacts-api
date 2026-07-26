@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CompanyNotFoundException } from '../companies/exceptions/company-not-found.exception';
-import { IncidentNotFoundException } from '../incidents/exceptions/incident-not-found.exception';
-import { AuditLogService } from '../audit-log/audit-log.service';
-import { HandlerNotFoundException } from './exceptions/handler-not-found.exception';
-import { EmailService } from '../email/email.service';
-import { UserNotFoundException } from '../users/exceptions/user-not-found.dto';
 import { ConfigService } from '@nestjs/config';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { PaginationDto } from '../common/pagination.dto';
+import { EmailService } from '../email/email.service';
+import { IncidentStatus } from '../generated/prisma/enums';
+import { IncidentWhereInput } from '../generated/prisma/models';
+import { IncidentNotFoundException } from '../incidents/exceptions/incident-not-found.exception';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserNotFoundException } from '../users/exceptions/user-not-found.dto';
+import { HandlerNotFoundException } from './exceptions/handler-not-found.exception';
 
 @Injectable()
 export class HandlersService {
@@ -30,22 +32,72 @@ export class HandlersService {
     }
 
     // get a handler's incidents
-    async getHandlerIncidents(handlerId: string) {
+    async getHandlerIncidents(handlerId: string, pagination: PaginationDto) {
         try {
-            const handler = await this.prisma.user.findUnique({ where: { id: handlerId } });
 
-            if (!handler) throw new HandlerNotFoundException(handlerId);
+            const {
+                limit = 10,
+                page = 1,
+                search
+            } = pagination;
 
-            return await this.prisma.incident.findMany({
-                where: {
-                    handlers: {
-                        some: {
-                            handlerId
-                        }
-                    }
+            const skip = (page - 1) * limit;
+
+            const searchTerm = search?.trim();
+
+            const statusMatch = Object.values(IncidentStatus)
+                .includes(searchTerm as IncidentStatus) ?
+                searchTerm as IncidentStatus : undefined;
+
+            const where: IncidentWhereInput = {
+                handlers: {
+                    some: {
+                        handlerId,
+                    },
+                },
+                ...(searchTerm && {
+                    OR: [
+                        {
+                            incidentIdDisplay: {
+                                contains: searchTerm,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            category: {
+                                contains: searchTerm,
+                                mode: "insensitive",
+                            },
+                        },
+                        ...(statusMatch ? [{ status: statusMatch }] : []),
+                    ],
+                }),
+            };
+
+            const [incidents, total] = await Promise.all([
+                this.prisma.incident.findMany({
+                    where,
+                    skip,
+                    take: limit,
+                }).then(incidents => incidents.map(({createdAt, deadlineAt, ...rest}) => ({
+                    ...rest,
+                    createdAt: createdAt.toLocaleDateString("en-KE", {day: "2-digit", month: "short", year: "numeric"}),
+                    deadlineAt: deadlineAt?.toLocaleDateString("en-KE", {day: "2-digit", month: "short", year: "numeric"}),
+                }))),
+                this.prisma.incident.count({
+                    where,
+                }),
+            ]);
+
+            return {
+                incidents,
+                meta: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
                 }
-            });
-
+            }
         } catch (error) {
             throw new Error(String(error));
         }
@@ -54,7 +106,7 @@ export class HandlersService {
     // assign an incident to a handler
     async assignHandler(handlerId: string, incidentId: string, email: string) {
         try {
-            const incident = await this.prisma.incident.findUnique({ where: { id: incidentId }, include: {company: true} })
+            const incident = await this.prisma.incident.findUnique({ where: { id: incidentId }, include: { company: true } })
 
             if (!incident) throw new IncidentNotFoundException(incidentId);
 
@@ -64,7 +116,7 @@ export class HandlersService {
                 }
             });
 
-            if(!user){
+            if (!user) {
                 throw new UserNotFoundException()
             }
 
