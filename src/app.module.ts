@@ -20,7 +20,6 @@ import { IncidentAuthModule } from './incident-auth/incident-auth.module';
 import { AttachmentsModule } from './attachments/attachments.module';
 import { ReportingPageModule } from './reporting-page/reporting-page.module';
 import { CategoriesModule } from './categories/categories.module';
-import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -50,7 +49,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     AttachmentsModule,
     ReportingPageModule,
     CategoriesModule,
-    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
