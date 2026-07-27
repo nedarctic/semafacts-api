@@ -359,16 +359,26 @@ export class CompaniesService {
         return company._count.incidents;
     }
 
-    // get a company's audit logs
-    async getCompanyAuditLogs(companyId: string) {
+    // get the total open incidents of a company
+    async getTotalCompanyOpenIncidents(companyId: string) {
         const company = await this.prismaService.company.findUnique({
             where: { id: companyId },
             select: {
-                auditLogs: {
-                    orderBy: {
-                        createdAt: "desc"
-                    },
-                    take: 5
+                _count: {
+                    select: {
+                        incidents: {
+                            where: {
+                                NOT: [
+                                    {
+                                        status: "Closed"
+                                    },
+                                    {
+                                        status: "Resolved"
+                                    }
+                                ]
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -377,7 +387,50 @@ export class CompaniesService {
             throw new CompanyNotFoundException();
         }
 
-        return company.auditLogs;
+        return company._count.incidents;
+    }
+
+    // get a company's audit logs
+    async getCompanyAuditLogs(companyId: string, pagination: PaginationDto) {
+        const {
+            page = 1,
+            limit = 10,
+        } = pagination;
+
+        const skip = (page - 1) * limit;
+
+        const company = await this.prismaService.company.findUnique({
+            where: { id: companyId },
+            select: { id: true },
+        });
+
+        if (!company) {
+            throw new CompanyNotFoundException();
+        }
+
+        const [auditLogs, total] = await Promise.all([
+            this.prismaService.auditLog.findMany({
+                where: { companyId },
+                skip,
+                take: limit,
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            }),
+            this.prismaService.auditLog.count({
+                where: { companyId },
+            }),
+        ]);
+
+        return {
+            auditLogs,
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit),
+            },
+        };
     }
 
     // get a company's reporting categories
@@ -451,7 +504,7 @@ export class CompaniesService {
         }
     }
 
-    // get a company's incidents
+    // get a company's incidents: paginated
     async getCompanyIncidents(companyId: string, pagination: PaginationDto) {
         try {
 
@@ -535,6 +588,47 @@ export class CompaniesService {
             }
 
         } catch (error) {
+            throw new Error(String(error));
+        }
+    }
+
+    // get a company's incidents: non-paginated
+    async getCompanyIncidentsCreatedAt(companyId: string) {
+        try {
+            const company = await this.prismaService.company.findUnique({
+                where: { id: companyId },
+            });
+
+            if (!company) {
+                throw new CompanyNotFoundException();
+            }
+
+            const incidents = await this.prismaService.incident.findMany({
+                where: {
+                    companyId,
+                },
+                select: {
+                    createdAt: true
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            });
+
+            return incidents.map(({
+                createdAt,
+            }) => ({
+                createdAt: createdAt.toLocaleDateString('en-KE', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                }),
+            }));
+        } catch (error) {
+            if (error instanceof CompanyNotFoundException) {
+                throw error;
+            }
+
             throw new Error(String(error));
         }
     }
@@ -678,7 +772,7 @@ export class CompaniesService {
                 throw new CompanyNotFoundException();
             }
 
-            if(company.logoKey && image.size > 0){
+            if (company.logoKey && image.size > 0) {
                 await this.r2Service.deleteFile(company.logoKey)
             }
 
