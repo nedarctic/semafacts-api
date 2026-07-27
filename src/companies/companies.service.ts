@@ -56,6 +56,9 @@ export class CompaniesService {
             const company = await this.prismaService.company.findUnique({
                 where: {
                     id: reportingPage?.companyId,
+                },
+                include: {
+                    reportingPage: true,
                 }
             })
 
