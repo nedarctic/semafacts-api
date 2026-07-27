@@ -38,6 +38,38 @@ export class CompaniesService {
         return company;
     }
 
+    // get company by reporting page url
+    async getCompanyByReportingUrl(reportingUrl: string) {
+        try {
+            const reportingPage = await this.prismaService.reportingPage.findUnique({
+                where: { 
+                    reportingPageUrl: reportingUrl
+                 }
+            });
+
+            if(!reportingPage){
+                return {
+                    message: "Reporting page not configured for this company yet."
+                }
+            }
+
+            const company = await this.prismaService.company.findUnique({
+                where: {
+                    id: reportingPage?.companyId,
+                }
+            })
+
+            this.logger.log(`Company data: ${company}`)
+            if (!company) {
+                throw new CompanyNotFoundException();
+            }
+
+            return company;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     // get all companies
     async getCompanies(pagination: PaginationDto) {
         const {

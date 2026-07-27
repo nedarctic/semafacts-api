@@ -9,7 +9,7 @@ import { CompaniesService } from './companies.service';
 import { AddUsersDto } from './dto/add-users.dto';
 import { ReportingPageDto as CreateReportingPageDto, ReportingPageDto } from './dto/reporting-page.dto';
 
-@UseGuards(JwtAuthGuard)
+
 @Controller('companies')
 export class CompaniesController {
 
@@ -18,6 +18,8 @@ export class CompaniesController {
     constructor(private readonly companiesService: CompaniesService) { }
 
     // get all companies
+    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN)
     @Get()
@@ -26,6 +28,8 @@ export class CompaniesController {
     }
 
     // get company by id
+    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId')
@@ -33,7 +37,14 @@ export class CompaniesController {
         return await this.companiesService.getCompanyById(companyId);
     }
 
+    // get company by reporting page
+    @Get(':reportingUrl/company')
+    async getCompanyByReportingUrl(@Param('reportingUrl') reportingUrl: string) {
+        return await this.companiesService.getCompanyByReportingUrl(reportingUrl);
+    }
+
     // get company users
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/users')
@@ -45,6 +56,7 @@ export class CompaniesController {
     }
 
     // get company handlers
+    @UseGuards(JwtAuthGuard)
     @Get(':companyId/handlers/')
     async getCompanyHandlers(
         @Param('companyId') companyId: string,
@@ -54,6 +66,7 @@ export class CompaniesController {
     }
 
     // get company incidents: paginated
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/incidents')
@@ -65,6 +78,7 @@ export class CompaniesController {
     }
 
     // get company incidents created data for dashboard
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/incidents/created-at')
@@ -75,6 +89,7 @@ export class CompaniesController {
     }
 
     // get total company users
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-users')
@@ -83,6 +98,7 @@ export class CompaniesController {
     }
 
     // get company total admins
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-admins')
@@ -91,6 +107,7 @@ export class CompaniesController {
     }
 
     // get company total handlers
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-handlers')
@@ -99,6 +116,7 @@ export class CompaniesController {
     }
 
     // get company total invited users
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-invited-users')
@@ -107,6 +125,7 @@ export class CompaniesController {
     }
 
     // get company total active users
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-active-users')
@@ -115,6 +134,7 @@ export class CompaniesController {
     }
 
     // get company total inactive users
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-inactive-users')
@@ -123,6 +143,7 @@ export class CompaniesController {
     }
 
     // get company total incidents
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-incidents')
@@ -131,6 +152,7 @@ export class CompaniesController {
     }
 
     // get company total open incidents
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/total-open-incidents')
@@ -139,6 +161,7 @@ export class CompaniesController {
     }
 
     // get company audit logs
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/audit-logs')
@@ -150,6 +173,7 @@ export class CompaniesController {
     }
 
     // get company categories
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/categories')
@@ -158,6 +182,7 @@ export class CompaniesController {
     }
 
     // get company reporting page
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/reporting-page')
@@ -166,6 +191,7 @@ export class CompaniesController {
     }
 
     // create new company
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN)
     @Post()
@@ -174,6 +200,7 @@ export class CompaniesController {
     }
 
     // add users to company
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':companyId/users')
@@ -182,6 +209,7 @@ export class CompaniesController {
     }
 
     // add categories to company
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':companyId/categories')
@@ -190,6 +218,7 @@ export class CompaniesController {
     }
 
     // send invitation email to handler
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     @Post(':companyId/invite')
@@ -199,6 +228,7 @@ export class CompaniesController {
     }
 
     // add reporting page to company
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post(':companyId/reporting-page')
@@ -207,6 +237,7 @@ export class CompaniesController {
     }
 
     // update company details
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @UseInterceptors(FileInterceptor('logo'))
@@ -216,6 +247,7 @@ export class CompaniesController {
     }
 
     // update company category name
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Patch(':companyId/categories/:categoryId')
@@ -223,7 +255,8 @@ export class CompaniesController {
         return await this.companiesService.updateCompanyCategory(companyId, categoryId, body.categoryName);
     }
 
-    // update reporting page    
+    // update reporting page
+    @UseGuards(JwtAuthGuard)    
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Patch(':companyId/reporting-page')
@@ -232,6 +265,7 @@ export class CompaniesController {
     }
 
     // delete category from company
+    @UseGuards(JwtAuthGuard)
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Delete(':companyId/categories/:categoryId')
