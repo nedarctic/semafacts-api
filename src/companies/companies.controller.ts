@@ -53,7 +53,7 @@ export class CompaniesController {
         return await this.companiesService.getCompanyHandlers(companyId, incidentId);
     }
 
-    // get company incidents
+    // get company incidents: paginated
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/incidents')
@@ -62,6 +62,16 @@ export class CompaniesController {
         @Query() pagination: PaginationDto
     ) {
         return await this.companiesService.getCompanyIncidents(companyId, pagination);
+    }
+
+    // get company incidents created data for dashboard
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':companyId/incidents/created-at')
+    async getCompanyIncidentsCreatedAt(
+        @Param('companyId') companyId: string
+    ) {
+        return await this.companiesService.getCompanyIncidentsCreatedAt(companyId);
     }
 
     // get total company users
@@ -120,12 +130,23 @@ export class CompaniesController {
         return await this.companiesService.getTotalCompanyIncidents(companyId);
     }
 
+    // get company total open incidents
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    @Get(':companyId/total-open-incidents')
+    async getTotalCompanyOpenIncidents(@Param('companyId') companyId: string) {
+        return await this.companiesService.getTotalCompanyOpenIncidents(companyId);
+    }
+
     // get company audit logs
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get(':companyId/audit-logs')
-    async getCompanyAuditLogs(@Param('companyId') companyId: string) {
-        return await this.companiesService.getCompanyAuditLogs(companyId);
+    async getCompanyAuditLogs(
+        @Param('companyId') companyId: string,
+        @Query() pagination: PaginationDto
+    ) {
+        return await this.companiesService.getCompanyAuditLogs(companyId, pagination);
     }
 
     // get company categories
