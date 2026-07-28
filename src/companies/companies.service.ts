@@ -59,6 +59,7 @@ export class CompaniesService {
                 },
                 include: {
                     reportingPage: true,
+                    categories: true,
                 }
             })
 
@@ -675,9 +676,17 @@ export class CompaniesService {
         // create reporting page
         await this.prismaService.reportingPage.create({
             data: {
-                companyId: res.id
+                companyId: res.id,
             }
-        })
+        });
+
+        await this.prismaService.category.create({
+            data: {
+                companyId: res.id,
+                categoryName: "Discrimination"
+            }
+        });
+
         await this.auditLog.createAuditLog("Company added", `${res.name} successfully added to SemaFacts whistleblowing system`, res.id)
         return res;
     }

@@ -8,13 +8,13 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../generated/prisma/enums';
 import { PaginationDto } from '../common/pagination.dto';
 
-@UseGuards(JwtAuthGuard)
+
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     // get users
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Get()
     getUsers(@Query() pagination: PaginationDto) {
@@ -22,7 +22,7 @@ export class UsersController {
     }
 
     // get user by id
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.HANDLER)
     @Get(':userId')
     getUserById(@Param('userId', new ParseUUIDPipe()) userId: string) {
@@ -30,7 +30,7 @@ export class UsersController {
     }
 
     // create user
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Post()
     createUser(@Body() body: CreateUserDto) {
@@ -38,15 +38,23 @@ export class UsersController {
     }
 
     // update user
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.HANDLER)
     @Patch(':id')
     updateUser(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: UpdateUserDto) {
         return this.usersService.updateUser(id, body);
     }
 
+    // send password reset email
+    @Post("password-reset")
+    async sendPasswordResetEmail (
+        @Body() dto: {email: string}
+    ) {
+        return await this.usersService.sendPasswordResetEmail(dto.email);
+    }
+
     // delete user
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @Delete(':id')
     deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
